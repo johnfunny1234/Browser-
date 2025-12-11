@@ -305,38 +305,49 @@
       return `https://duckduckgo.com/?q=${encoded}`;
     }
 
+    function renderAboutBlank(popup, targetUrl) {
+      const safeUrl = targetUrl.replace(/"/g, "&quot;");
+      const frame = `<!doctype html><html><head><title>GhostSurf</title><style>html,body{margin:0;padding:0;width:100%;height:100%;background:#0a0c16;color:#e8efff;font-family:Inter,system-ui,sans-serif;}header{padding:10px 14px;display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.03);border-bottom:1px solid rgba(255,255,255,0.08);}header span{opacity:0.7;font-size:13px;}iframe{border:0;width:100%;height:calc(100% - 50px);display:block;}</style></head><body><header><strong>GhostSurf</strong><span>Running inside about:blank</span></header><iframe src="${safeUrl}" allowfullscreen referrerpolicy="no-referrer"></iframe></body></html>`;
+      popup.document.open();
+      popup.document.write(frame);
+      popup.document.close();
+    }
+
     function launch(url) {
       if (!url) {
         setStatus("Type something first.", "error");
         queryInput.focus();
         return;
       }
-      const popup = window.open("about:blank", "_blank");
+
+      const popup = window.open("about:blank", "_blank", "noopener,noreferrer");
       if (!popup) {
         setStatus("Popup blocked. Allow popups or use the quick link below.", "error");
         addFallbackLink(url);
         return;
       }
-      popup.document.write("<title>Loading...</title>");
-      popup.document.close();
-      setTimeout(() => {
-        try {
-          popup.location.href = url;
-          setStatus("Opened in a blank tab.", "success");
-        } catch (err) {
-          console.warn(err);
-          setStatus("The site blocked embedding. Use the direct link instead.", "error");
-          addFallbackLink(url);
-        }
-      }, 50);
+
+      try {
+        renderAboutBlank(popup, url);
+        setStatus("Opened inside about:blank.", "success");
+      } catch (err) {
+        console.warn(err);
+        setStatus("Could not render in about:blank. Use the direct link instead.", "error");
+        addFallbackLink(url);
+      }
     }
 
     function addFallbackLink(url) {
+      let label = "Open link directly";
+      try {
+        label = `Open ${new URL(url).hostname}`;
+      } catch (_) {}
       const link = document.createElement("a");
       link.href = url;
-      link.textContent = `Open ${new URL(url).hostname}`;
+      link.textContent = label;
       link.className = "link-card";
       link.target = "_blank";
+      link.rel = "noreferrer";
       linksEl.prepend(link);
     }
 
