@@ -168,6 +168,8 @@
       color: var(--text);
       text-decoration: none;
       transition: transform 140ms ease, border-color 160ms ease;
+      display: block;
+      cursor: pointer;
     }
 
     .link-card:hover { transform: translateY(-1px); border-color: rgba(124, 231, 200, 0.5); }
@@ -181,6 +183,31 @@
 
     .status.error { color: var(--danger); }
     .status.success { color: var(--accent); }
+
+    .viewer {
+      margin-top: 12px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.04);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+      transition: max-height 240ms ease, opacity 240ms ease;
+      max-height: 0;
+      opacity: 0;
+    }
+
+    .viewer.active {
+      max-height: 780px;
+      opacity: 1;
+    }
+
+    .viewer iframe {
+      display: block;
+      width: 100%;
+      height: 720px;
+      border: none;
+      background: #0a0f1f;
+    }
 
     .overlay {
       position: fixed;
@@ -224,7 +251,7 @@
 
     <section class="card">
       <h2 class="title">Search or go</h2>
-      <p class="muted">Type a query or paste a URL. GhostSurf opens it in a Scramjet tab so the outer address bar stays clean.</p>
+      <p class="muted">Type a query or paste a URL. Scramjet loads right below so you stay on this page.</p>
       <form class="search" autocomplete="off">
         <div class="search-row">
           <input id="query" type="text" placeholder="Search the web or enter a link" />
@@ -233,6 +260,9 @@
       </form>
       <div class="chips" id="chips"></div>
       <div class="status" id="status"></div>
+      <div class="viewer" id="viewer">
+        <iframe id="scramjet-frame" title="Scramjet" loading="lazy" sandbox="allow-scripts allow-forms allow-same-origin allow-popups allow-downloads"></iframe>
+      </div>
     </section>
 
     <section class="card">
@@ -263,9 +293,12 @@
     const statusEl = document.getElementById("status");
     const chipsEl = document.getElementById("chips");
     const linksEl = document.getElementById("links");
+    const viewer = document.getElementById("viewer");
+    const frame = document.getElementById("scramjet-frame");
     const lockLayer = document.getElementById("lock");
     const lockStatus = document.getElementById("lock-status");
     const lockPass = document.getElementById("lock-pass");
+    let loadTimer;
 
     const presets = [
       "fun free games",
@@ -312,6 +345,12 @@
       return scramjetUrl.toString();
     }
 
+    function showFrame() {
+      if (!viewer.classList.contains("active")) {
+        viewer.classList.add("active");
+      }
+    }
+
     function launch(url) {
       if (!url) {
         setStatus("Type something first.", "error");
@@ -319,23 +358,24 @@
         return;
       }
 
-      const scramjetUrl = buildScramjetUrl(url);
-      const popup = window.open(scramjetUrl, "_blank", "noopener");
-      if (!popup) {
-        setStatus("Popup blocked. Allow popups or use a fallback link below.", "error");
-        addFallbackLink(scramjetUrl, true);
-        addFallbackLink(url, false);
-        return;
+      if (loadTimer) {
+        clearTimeout(loadTimer);
       }
 
-      try {
-        setStatus("Opened through Scramjet.", "success");
-      } catch (err) {
-        console.warn(err);
-        setStatus("Could not render with Scramjet. Use the fallback links below.", "error");
+      const scramjetUrl = buildScramjetUrl(url);
+      showFrame();
+      setStatus("Loading with Scramjet...", "");
+      frame.src = scramjetUrl;
+      loadTimer = setTimeout(() => {
+        setStatus("If it looks stuck, use the fallback links below.", "error");
         addFallbackLink(scramjetUrl, true);
         addFallbackLink(url, false);
-      }
+      }, 8000);
+
+      frame.onload = () => {
+        clearTimeout(loadTimer);
+        setStatus("Running inside Scramjet.", "success");
+      };
     }
 
     function addFallbackLink(url, scramjetPreferred) {
@@ -373,13 +413,13 @@
     });
 
     quickLinks.forEach(({ label, url }) => {
-      const a = document.createElement("a");
-      a.href = url;
-      a.target = "_blank";
-      a.rel = "noreferrer";
-      a.textContent = label;
-      a.className = "link-card";
-      linksEl.appendChild(a);
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.textContent = label;
+      btn.className = "link-card";
+      btn.style.textAlign = "left";
+      btn.addEventListener("click", () => launch(url));
+      linksEl.appendChild(btn);
     });
 
     function unlock() {
