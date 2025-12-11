@@ -1,20 +1,20 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BlankSurf</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GhostSurf</title>
   <style>
     :root {
-      --bg: #0c1027;
-      --glass: rgba(255, 255, 255, 0.08);
-      --accent: #8df1d6;
-      --accent-2: #6db6ff;
-      --text: #e8f1ff;
-      --muted: #8ea0c2;
+      --bg: #050711;
+      --card: rgba(255, 255, 255, 0.05);
+      --border: rgba(255, 255, 255, 0.08);
+      --text: #f2f5ff;
+      --muted: #9aa3bd;
+      --accent: #7ce7c8;
+      --accent-2: #7ab3ff;
       --danger: #ff7b7b;
       --radius: 18px;
-      --shadow: 0 20px 80px rgba(0, 0, 0, 0.35);
     }
 
     * {
@@ -25,482 +25,373 @@
       margin: 0;
       min-height: 100vh;
       font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
-      background: radial-gradient(circle at 20% 20%, rgba(141, 241, 214, 0.13), transparent 35%),
-        radial-gradient(circle at 80% 10%, rgba(109, 182, 255, 0.16), transparent 40%),
-        radial-gradient(circle at 50% 80%, rgba(141, 241, 214, 0.12), transparent 45%),
+      background: radial-gradient(circle at 15% 20%, rgba(124, 231, 200, 0.09), transparent 38%),
+        radial-gradient(circle at 80% 10%, rgba(122, 179, 255, 0.1), transparent 45%),
+        radial-gradient(circle at 45% 80%, rgba(124, 231, 200, 0.07), transparent 50%),
         var(--bg);
       color: var(--text);
       display: flex;
       align-items: center;
       justify-content: center;
-      overflow: hidden;
+      padding: 32px 16px;
     }
 
-    .wrapper {
-      width: min(1100px, 90vw);
-      padding: 32px;
-      background: linear-gradient(145deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 28px;
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(16px);
-      transform: translateY(20px);
+    .shell {
+      width: min(720px, 100%);
+      background: linear-gradient(140deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 28px;
+      box-shadow: 0 18px 70px rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(12px);
+      transform: translateY(14px);
       opacity: 0;
-      transition: opacity 500ms ease, transform 600ms ease;
-    }
-
-    .wrapper.ready {
-      transform: translateY(0);
-      opacity: 1;
+      animation: floatIn 600ms ease forwards;
     }
 
     header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 16px;
-      margin-bottom: 24px;
+      gap: 12px;
+      margin-bottom: 18px;
     }
 
-    .title {
-      font-size: 28px;
+    .brand {
+      font-size: 26px;
       letter-spacing: 0.6px;
       display: flex;
       align-items: center;
-      gap: 12px;
-    }
-
-    .title span {
-      padding: 6px 14px;
-      border-radius: 30px;
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      color: #041220;
+      gap: 10px;
       font-weight: 700;
-      text-transform: uppercase;
-      font-size: 12px;
-      box-shadow: 0 10px 30px rgba(109, 182, 255, 0.25);
     }
 
-    .pill {
-      padding: 10px 16px;
+    .tag {
+      padding: 6px 12px;
       border-radius: 999px;
-      background: var(--glass);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      color: var(--muted);
-      font-size: 14px;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .search-card {
-      background: var(--glass);
-      border: 1px solid rgba(255, 255, 255, 0.07);
-      border-radius: var(--radius);
-      padding: 22px;
-      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02), 0 20px 50px rgba(0, 0, 0, 0.25);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .search-card::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at 70% 20%, rgba(109, 182, 255, 0.12), transparent 40%);
-      pointer-events: none;
-    }
-
-    form.search {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .search input {
-      flex: 1;
-      padding: 16px 18px;
-      border-radius: 14px;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      background: rgba(255, 255, 255, 0.03);
-      color: var(--text);
-      font-size: 16px;
-      outline: none;
-      transition: border-color 200ms ease, transform 180ms ease;
-    }
-
-    .search input:focus {
-      border-color: var(--accent);
-      transform: translateY(-1px);
-      box-shadow: 0 12px 24px rgba(141, 241, 214, 0.12);
-    }
-
-    .btn {
-      padding: 14px 18px;
-      border-radius: 12px;
-      border: none;
-      cursor: pointer;
-      font-weight: 700;
-      letter-spacing: 0.3px;
-      font-size: 15px;
-      color: #041220;
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      box-shadow: 0 14px 35px rgba(109, 182, 255, 0.30);
-      transition: transform 160ms ease, box-shadow 200ms ease;
-    }
-
-    .btn:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 18px 45px rgba(141, 241, 214, 0.28);
-    }
-
-    .btn:active {
-      transform: translateY(0);
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 16px;
-      margin-top: 18px;
+      background: rgba(124, 231, 200, 0.1);
+      color: var(--accent);
+      font-size: 12px;
+      border: 1px solid rgba(124, 231, 200, 0.3);
     }
 
     .card {
-      background: var(--glass);
-      border: 1px solid rgba(255, 255, 255, 0.06);
+      background: var(--card);
+      border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 16px;
-      min-height: 130px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      position: relative;
-      overflow: hidden;
-      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
-      transition: transform 180ms ease, border-color 200ms ease;
+      padding: 18px;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
     }
 
-    .card:hover {
-      transform: translateY(-2px);
-      border-color: rgba(141, 241, 214, 0.4);
+    .card + .card { margin-top: 14px; }
+
+    .title {
+      font-size: 20px;
+      margin: 0 0 6px;
     }
 
-    .card::before {
-      content: "";
-      position: absolute;
-      width: 140px;
-      height: 140px;
-      background: radial-gradient(circle, rgba(141, 241, 214, 0.12), transparent 60%);
-      top: -60px;
-      right: -30px;
-      z-index: 0;
-    }
+    .muted { color: var(--muted); margin: 0 0 12px; }
 
-    .card h3 {
-      margin: 0;
-      font-size: 18px;
-      z-index: 1;
-    }
-
-    .card p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.6;
-      z-index: 1;
-    }
-
-    .quick-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      z-index: 1;
-    }
-
-    .quick-links button {
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      background: rgba(255, 255, 255, 0.05);
-      color: var(--text);
-      border-radius: 12px;
-      padding: 10px 14px;
-      cursor: pointer;
-      transition: transform 150ms ease, border-color 200ms ease;
-    }
-
-    .quick-links button:hover {
-      transform: translateY(-2px);
-      border-color: var(--accent);
-    }
-
-    .footer-note {
-      margin-top: 12px;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .login-backdrop {
-      position: fixed;
-      inset: 0;
+    .search-row {
       display: grid;
-      place-items: center;
-      background: radial-gradient(circle at 30% 30%, rgba(141, 241, 214, 0.15), transparent 40%),
-        radial-gradient(circle at 70% 70%, rgba(109, 182, 255, 0.12), transparent 40%),
-        rgba(6, 10, 25, 0.86);
-      backdrop-filter: blur(8px);
-      z-index: 10;
-      opacity: 1;
-      transition: opacity 450ms ease;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
     }
 
-    .login-backdrop.hidden {
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .login-card {
-      width: min(420px, 90vw);
-      padding: 30px;
-      background: var(--glass);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 24px;
-      box-shadow: var(--shadow);
-      transform: translateY(-8px);
-      animation: float 6s ease-in-out infinite;
-    }
-
-    .login-card h2 {
-      margin: 0 0 12px;
-    }
-
-    .login-card p {
-      color: var(--muted);
-      margin: 0 0 18px;
-    }
-
-    .login-card input {
+    input[type="text"], input[type="password"] {
       width: 100%;
       padding: 14px 16px;
       border-radius: 12px;
       border: 1px solid rgba(255, 255, 255, 0.12);
       background: rgba(255, 255, 255, 0.04);
       color: var(--text);
+      font-size: 15px;
       outline: none;
-      margin-bottom: 14px;
-      transition: border-color 180ms ease;
+      transition: border-color 160ms ease, transform 160ms ease, box-shadow 180ms ease;
     }
 
-    .login-card input:focus {
+    input:focus {
       border-color: var(--accent);
+      transform: translateY(-1px);
+      box-shadow: 0 10px 24px rgba(124, 231, 200, 0.16);
     }
 
-    .error-text {
-      color: var(--danger);
-      min-height: 20px;
+    button {
+      padding: 13px 18px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #041220;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      box-shadow: 0 14px 35px rgba(122, 179, 255, 0.28);
+      transition: transform 150ms ease, box-shadow 180ms ease;
+    }
+
+    button:hover { transform: translateY(-1px); box-shadow: 0 16px 40px rgba(124, 231, 200, 0.28); }
+    button:active { transform: translateY(0); }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .chip {
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text);
+      font-size: 13px;
+      cursor: pointer;
+      transition: transform 140ms ease, border-color 160ms ease;
+    }
+
+    .chip:hover { transform: translateY(-1px); border-color: rgba(124, 231, 200, 0.4); }
+
+    .links {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .link-card {
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      padding: 12px 14px;
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text);
+      text-decoration: none;
+      transition: transform 140ms ease, border-color 160ms ease;
+    }
+
+    .link-card:hover { transform: translateY(-1px); border-color: rgba(124, 231, 200, 0.5); }
+
+    .status {
+      margin-top: 10px;
+      color: var(--muted);
       font-size: 14px;
-      transition: opacity 200ms ease;
+      min-height: 20px;
     }
 
-    @keyframes float {
-      0%, 100% { transform: translateY(-6px); }
-      50% { transform: translateY(4px); }
+    .status.error { color: var(--danger); }
+    .status.success { color: var(--accent); }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 7, 17, 0.8);
+      backdrop-filter: blur(12px);
+      display: grid;
+      place-items: center;
+      z-index: 10;
+      transition: opacity 240ms ease;
     }
 
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      20%, 60% { transform: translateX(-10px); }
-      40%, 80% { transform: translateX(10px); }
+    .overlay.hide { opacity: 0; pointer-events: none; }
+
+    .lock-card {
+      width: min(360px, 90vw);
+      padding: 22px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 14px 50px rgba(0, 0, 0, 0.35);
+      text-align: center;
+      animation: floatIn 420ms ease;
     }
 
-    .shake {
-      animation: shake 350ms ease;
-    }
+    .lock-card h2 { margin: 0 0 10px; }
+    .lock-card p { margin: 0 0 14px; color: var(--muted); }
 
-    @media (max-width: 640px) {
-      header { flex-direction: column; align-items: flex-start; }
-      .title { font-size: 22px; }
-      form.search { flex-direction: column; }
-      .search input, .btn { width: 100%; }
+    @keyframes floatIn {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 <body>
-  <div class="login-backdrop" id="login">
-    <div class="login-card" id="loginCard">
-      <h2>Welcome back</h2>
-      <p>Unlock the stealthy search hub. Enter the secret password to continue.</p>
-      <input type="password" id="password" placeholder="Password" autocomplete="current-password" />
-      <button class="btn" id="loginBtn" aria-label="Unlock">Unlock portal</button>
-      <div class="error-text" id="errorMsg"></div>
-    </div>
-  </div>
-
-  <div class="wrapper" id="app" aria-hidden="true">
+  <div class="shell">
     <header>
-      <div class="title">
-        BlankSurf
-        <span>Incognito fun</span>
-      </div>
-      <div class="pill">Smooth searches · about:blank sandbox · game friendly</div>
+      <div class="brand">GhostSurf <span class="tag">Stealth tab</span></div>
+      <div class="muted">Open sites through a blank tab</div>
     </header>
 
-    <section class="search-card">
-      <form class="search" id="searchForm">
-        <input id="query" type="text" placeholder="Search or paste a link" aria-label="Search or URL" required />
-        <button class="btn" type="submit">Launch in about:blank</button>
+    <section class="card">
+      <h2 class="title">Search or go</h2>
+      <p class="muted">Type a query or paste a URL. GhostSurf opens it in a fresh about:blank tab for fewer traces.</p>
+      <form class="search" autocomplete="off">
+        <div class="search-row">
+          <input id="query" type="text" placeholder="Search the web or enter a link" />
+          <button type="submit">Launch</button>
+        </div>
       </form>
-      <p class="footer-note">Tip: paste a game URL or search a topic — it opens in a blank sandbox tab.</p>
+      <div class="chips" id="chips"></div>
+      <div class="status" id="status"></div>
     </section>
 
-    <div class="grid">
-      <div class="card">
-        <h3>Quick jumps</h3>
-        <p>Instantly open a site inside an about:blank wrapper. Great for mini-games or music players.</p>
-        <div class="quick-links" id="quickLinks"></div>
-      </div>
-      <div class="card">
-        <h3>Preset searches</h3>
-        <p>Need ideas? Try a curated search that lands in the blank tab experience.</p>
-        <div class="quick-links" id="presetSearches"></div>
-      </div>
-      <div class="card">
-        <h3>Session log</h3>
-        <p id="sessionLog">No launches yet. Your next jump appears here.</p>
-      </div>
+    <section class="card">
+      <h3 class="title">Quick jumps</h3>
+      <p class="muted">Popular spots in one tap.</p>
+      <div class="links" id="links"></div>
+    </section>
+  </div>
+
+  <div class="overlay" id="lock">
+    <div class="lock-card">
+      <h2>Login required</h2>
+      <p>Enter the access password to unlock GhostSurf.</p>
+      <form id="lock-form">
+        <input id="lock-pass" type="password" placeholder="Password" autocomplete="current-password" />
+        <div style="height: 10px"></div>
+        <button type="submit" style="width: 100%">Unlock</button>
+      </form>
+      <div class="status" id="lock-status"></div>
     </div>
   </div>
 
   <script>
     const PASSWORD = "Theone42";
-    const loginOverlay = document.getElementById("login");
-    const loginCard = document.getElementById("loginCard");
-    const passwordInput = document.getElementById("password");
-    const loginBtn = document.getElementById("loginBtn");
-    const errorMsg = document.getElementById("errorMsg");
-    const app = document.getElementById("app");
-    const searchForm = document.getElementById("searchForm");
+    const KEY_UNLOCKED = "ghostsurf-unlocked";
     const queryInput = document.getElementById("query");
-    const sessionLog = document.getElementById("sessionLog");
-    const quickLinks = document.getElementById("quickLinks");
-    const presetSearches = document.getElementById("presetSearches");
+    const statusEl = document.getElementById("status");
+    const chipsEl = document.getElementById("chips");
+    const linksEl = document.getElementById("links");
+    const lockLayer = document.getElementById("lock");
+    const lockStatus = document.getElementById("lock-status");
+    const lockPass = document.getElementById("lock-pass");
 
-    const savedUnlocked = sessionStorage.getItem("blanksurf-unlocked") === "true";
+    const presets = [
+      "fun free games",
+      "retro emulators",
+      "math puzzles",
+      "space news",
+      "cool wallpapers",
+      "coding sandboxes"
+    ];
 
-    function unlockUI() {
-      loginOverlay.classList.add("hidden");
-      app.classList.add("ready");
-      app.setAttribute("aria-hidden", "false");
-      setTimeout(() => loginOverlay.remove(), 700);
-      sessionStorage.setItem("blanksurf-unlocked", "true");
-      queryInput.focus();
+    const quickLinks = [
+      { label: "Itch.io games", url: "https://itch.io/games" },
+      { label: "Classic Reload", url: "https://www.classicreload.com/" },
+      { label: "CoolMath Games", url: "https://www.coolmathgames.com/" },
+      { label: "Archive.org", url: "https://archive.org/" },
+      { label: "Wikipedia", url: "https://wikipedia.org" },
+      { label: "YouTube", url: "https://youtube.com" }
+    ];
+
+    function setStatus(msg, type = "") {
+      statusEl.textContent = msg;
+      statusEl.className = `status ${type}`;
     }
 
-    function handleLogin() {
-      const value = passwordInput.value.trim();
-      if (value === PASSWORD) {
-        errorMsg.textContent = "";
-        unlockUI();
-      } else {
-        errorMsg.textContent = "Wrong key. Hint: capital T.";
-        loginCard.classList.remove("shake");
-        // Trigger reflow to replay the animation
-        void loginCard.offsetWidth;
-        loginCard.classList.add("shake");
-      }
+    function setLockStatus(msg, type = "") {
+      lockStatus.textContent = msg;
+      lockStatus.className = `status ${type}`;
     }
 
-    function normaliseTarget(input) {
-      const looksLikeUrl = /\./.test(input) && !/\s/.test(input);
+    function normalizeQuery(input) {
+      const value = input.trim();
+      if (!value) return "";
+      const looksLikeUrl = /\./.test(value) && !/\s/.test(value);
       if (looksLikeUrl) {
-        const hasProtocol = /^https?:\/\//i.test(input);
-        return hasProtocol ? input : `https://${input}`;
+        return value.startsWith("http://") || value.startsWith("https://") ? value : `https://${value}`;
       }
-      return `https://duckduckgo.com/?q=${encodeURIComponent(input)}`;
+      const encoded = encodeURIComponent(value);
+      return `https://duckduckgo.com/?q=${encoded}`;
     }
 
-    function openAboutBlank(targetUrl) {
-      const popup = window.open("about:blank");
-      if (!popup) {
-        alert("Please allow pop-ups to launch the about:blank experience.");
+    function launch(url) {
+      if (!url) {
+        setStatus("Type something first.", "error");
+        queryInput.focus();
         return;
       }
-
-      const safeHTML = `<!DOCTYPE html><html><head><title>BlankSurf</title><style>
-        html,body{margin:0;height:100%;background:#050816;overflow:hidden;color:#cfe4ff;font-family:Inter,system-ui,sans-serif;}
-        header{padding:12px 18px;background:linear-gradient(135deg,#0f172a,#0a0f26);display:flex;align-items:center;gap:10px;box-shadow:0 12px 35px rgba(0,0,0,0.45);}
-        header span{color:#8df1d6;font-weight:700;font-size:14px;letter-spacing:0.4px;}
-        iframe{width:100%;height:calc(100% - 50px);border:0;border-top:1px solid rgba(255,255,255,0.04);background:#0a0f26;}
-      </style></head><body>
-        <header><span>about:blank portal</span><div style="color:#7f91b4;font-size:13px;">${targetUrl}</div></header>
-        <iframe src="${targetUrl}" allow="fullscreen"></iframe>
-      </body></html>`;
-
-      popup.document.open();
-      popup.document.write(safeHTML);
+      const popup = window.open("about:blank", "_blank");
+      if (!popup) {
+        setStatus("Popup blocked. Allow popups or use the quick link below.", "error");
+        addFallbackLink(url);
+        return;
+      }
+      popup.document.write("<title>Loading...</title>");
       popup.document.close();
-      addSessionLog(targetUrl);
+      setTimeout(() => {
+        try {
+          popup.location.href = url;
+          setStatus("Opened in a blank tab.", "success");
+        } catch (err) {
+          console.warn(err);
+          setStatus("The site blocked embedding. Use the direct link instead.", "error");
+          addFallbackLink(url);
+        }
+      }, 50);
     }
 
-    function addSessionLog(target) {
-      const time = new Date().toLocaleTimeString();
-      sessionLog.textContent = `Last launch (${time}): ${target}`;
+    function addFallbackLink(url) {
+      const link = document.createElement("a");
+      link.href = url;
+      link.textContent = `Open ${new URL(url).hostname}`;
+      link.className = "link-card";
+      link.target = "_blank";
+      linksEl.prepend(link);
     }
 
-    function createChip(label, action) {
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.textContent = label;
-      btn.addEventListener("click", action);
-      return btn;
+    document.querySelector("form.search").addEventListener("submit", (e) => {
+      e.preventDefault();
+      setStatus("Launching...", "");
+      const url = normalizeQuery(queryInput.value);
+      launch(url);
+    });
+
+    presets.forEach((text) => {
+      const chip = document.createElement("button");
+      chip.type = "button";
+      chip.textContent = text;
+      chip.className = "chip";
+      chip.addEventListener("click", () => {
+        queryInput.value = text;
+        queryInput.focus();
+      });
+      chipsEl.appendChild(chip);
+    });
+
+    quickLinks.forEach(({ label, url }) => {
+      const a = document.createElement("a");
+      a.href = url;
+      a.target = "_blank";
+      a.rel = "noreferrer";
+      a.textContent = label;
+      a.className = "link-card";
+      linksEl.appendChild(a);
+    });
+
+    function unlock() {
+      lockLayer.classList.add("hide");
+      setTimeout(() => lockLayer.remove(), 260);
+      queryInput.focus();
+      localStorage.setItem(KEY_UNLOCKED, "1");
     }
 
-    const quickJumpSites = [
-      "https://orteil.dashnet.org/cookieclicker/",
-      "https://www.crazygames.com",
-      "https://retroworld.is-a.dev/",
-      "https://tetr.io/",
-      "https://www.chess.com/play/computer"
-    ];
-
-    quickJumpSites.forEach((site) => {
-      quickLinks.appendChild(
-        createChip(new URL(site).hostname.replace("www.", ""), () => openAboutBlank(site))
-      );
-    });
-
-    const presetIdeas = [
-      "free math games",
-      "calming lofi playlist",
-      "browser fps games",
-      "pixel art editor online",
-      "retro flash alternatives"
-    ];
-
-    presetIdeas.forEach((idea) => {
-      presetSearches.appendChild(
-        createChip(idea, () => openAboutBlank(normaliseTarget(idea)))
-      );
-    });
-
-    searchForm.addEventListener("submit", (event) => {
-      event.preventDefault();
-      const target = normaliseTarget(queryInput.value.trim());
-      if (!target) return;
-      openAboutBlank(target);
-      queryInput.value = "";
-    });
-
-    loginBtn.addEventListener("click", handleLogin);
-    passwordInput.addEventListener("keydown", (event) => {
-      if (event.key === "Enter") {
-        event.preventDefault();
-        handleLogin();
+    document.getElementById("lock-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const val = lockPass.value.trim();
+      if (val === PASSWORD) {
+        setLockStatus("Unlocked.", "success");
+        unlock();
+      } else {
+        setLockStatus("Wrong password.", "error");
+        lockPass.focus();
       }
     });
 
-    if (savedUnlocked) {
-      unlockUI();
+    if (localStorage.getItem(KEY_UNLOCKED) === "1") {
+      unlock();
+    } else {
+      lockPass.focus();
     }
   </script>
 </body>
