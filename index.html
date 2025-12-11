@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BlankSurf</title>
+  <style>
+    :root {
+      --bg: #0c1027;
+      --glass: rgba(255, 255, 255, 0.08);
+      --accent: #8df1d6;
+      --accent-2: #6db6ff;
+      --text: #e8f1ff;
+      --muted: #8ea0c2;
+      --danger: #ff7b7b;
+      --radius: 18px;
+      --shadow: 0 20px 80px rgba(0, 0, 0, 0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at 20% 20%, rgba(141, 241, 214, 0.13), transparent 35%),
+        radial-gradient(circle at 80% 10%, rgba(109, 182, 255, 0.16), transparent 40%),
+        radial-gradient(circle at 50% 80%, rgba(141, 241, 214, 0.12), transparent 45%),
+        var(--bg);
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .wrapper {
+      width: min(1100px, 90vw);
+      padding: 32px;
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+      transform: translateY(20px);
+      opacity: 0;
+      transition: opacity 500ms ease, transform 600ms ease;
+    }
+
+    .wrapper.ready {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .title {
+      font-size: 28px;
+      letter-spacing: 0.6px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .title span {
+      padding: 6px 14px;
+      border-radius: 30px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #041220;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 12px;
+      box-shadow: 0 10px 30px rgba(109, 182, 255, 0.25);
+    }
+
+    .pill {
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: var(--glass);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      color: var(--muted);
+      font-size: 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .search-card {
+      background: var(--glass);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: var(--radius);
+      padding: 22px;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02), 0 20px 50px rgba(0, 0, 0, 0.25);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .search-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 70% 20%, rgba(109, 182, 255, 0.12), transparent 40%);
+      pointer-events: none;
+    }
+
+    form.search {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .search input {
+      flex: 1;
+      padding: 16px 18px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text);
+      font-size: 16px;
+      outline: none;
+      transition: border-color 200ms ease, transform 180ms ease;
+    }
+
+    .search input:focus {
+      border-color: var(--accent);
+      transform: translateY(-1px);
+      box-shadow: 0 12px 24px rgba(141, 241, 214, 0.12);
+    }
+
+    .btn {
+      padding: 14px 18px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      font-size: 15px;
+      color: #041220;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: 0 14px 35px rgba(109, 182, 255, 0.30);
+      transition: transform 160ms ease, box-shadow 200ms ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 18px 45px rgba(141, 241, 214, 0.28);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .card {
+      background: var(--glass);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: var(--radius);
+      padding: 16px;
+      min-height: 130px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+      transition: transform 180ms ease, border-color 200ms ease;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(141, 241, 214, 0.4);
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      width: 140px;
+      height: 140px;
+      background: radial-gradient(circle, rgba(141, 241, 214, 0.12), transparent 60%);
+      top: -60px;
+      right: -30px;
+      z-index: 0;
+    }
+
+    .card h3 {
+      margin: 0;
+      font-size: 18px;
+      z-index: 1;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+      z-index: 1;
+    }
+
+    .quick-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      z-index: 1;
+    }
+
+    .quick-links button {
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 10px 14px;
+      cursor: pointer;
+      transition: transform 150ms ease, border-color 200ms ease;
+    }
+
+    .quick-links button:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent);
+    }
+
+    .footer-note {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .login-backdrop {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      background: radial-gradient(circle at 30% 30%, rgba(141, 241, 214, 0.15), transparent 40%),
+        radial-gradient(circle at 70% 70%, rgba(109, 182, 255, 0.12), transparent 40%),
+        rgba(6, 10, 25, 0.86);
+      backdrop-filter: blur(8px);
+      z-index: 10;
+      opacity: 1;
+      transition: opacity 450ms ease;
+    }
+
+    .login-backdrop.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .login-card {
+      width: min(420px, 90vw);
+      padding: 30px;
+      background: var(--glass);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      transform: translateY(-8px);
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .login-card h2 {
+      margin: 0 0 12px;
+    }
+
+    .login-card p {
+      color: var(--muted);
+      margin: 0 0 18px;
+    }
+
+    .login-card input {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+      outline: none;
+      margin-bottom: 14px;
+      transition: border-color 180ms ease;
+    }
+
+    .login-card input:focus {
+      border-color: var(--accent);
+    }
+
+    .error-text {
+      color: var(--danger);
+      min-height: 20px;
+      font-size: 14px;
+      transition: opacity 200ms ease;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(-6px); }
+      50% { transform: translateY(4px); }
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-10px); }
+      40%, 80% { transform: translateX(10px); }
+    }
+
+    .shake {
+      animation: shake 350ms ease;
+    }
+
+    @media (max-width: 640px) {
+      header { flex-direction: column; align-items: flex-start; }
+      .title { font-size: 22px; }
+      form.search { flex-direction: column; }
+      .search input, .btn { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-backdrop" id="login">
+    <div class="login-card" id="loginCard">
+      <h2>Welcome back</h2>
+      <p>Unlock the stealthy search hub. Enter the secret password to continue.</p>
+      <input type="password" id="password" placeholder="Password" autocomplete="current-password" />
+      <button class="btn" id="loginBtn" aria-label="Unlock">Unlock portal</button>
+      <div class="error-text" id="errorMsg"></div>
+    </div>
+  </div>
+
+  <div class="wrapper" id="app" aria-hidden="true">
+    <header>
+      <div class="title">
+        BlankSurf
+        <span>Incognito fun</span>
+      </div>
+      <div class="pill">Smooth searches · about:blank sandbox · game friendly</div>
+    </header>
+
+    <section class="search-card">
+      <form class="search" id="searchForm">
+        <input id="query" type="text" placeholder="Search or paste a link" aria-label="Search or URL" required />
+        <button class="btn" type="submit">Launch in about:blank</button>
+      </form>
+      <p class="footer-note">Tip: paste a game URL or search a topic — it opens in a blank sandbox tab.</p>
+    </section>
+
+    <div class="grid">
+      <div class="card">
+        <h3>Quick jumps</h3>
+        <p>Instantly open a site inside an about:blank wrapper. Great for mini-games or music players.</p>
+        <div class="quick-links" id="quickLinks"></div>
+      </div>
+      <div class="card">
+        <h3>Preset searches</h3>
+        <p>Need ideas? Try a curated search that lands in the blank tab experience.</p>
+        <div class="quick-links" id="presetSearches"></div>
+      </div>
+      <div class="card">
+        <h3>Session log</h3>
+        <p id="sessionLog">No launches yet. Your next jump appears here.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const PASSWORD = "Theone42";
+    const loginOverlay = document.getElementById("login");
+    const loginCard = document.getElementById("loginCard");
+    const passwordInput = document.getElementById("password");
+    const loginBtn = document.getElementById("loginBtn");
+    const errorMsg = document.getElementById("errorMsg");
+    const app = document.getElementById("app");
+    const searchForm = document.getElementById("searchForm");
+    const queryInput = document.getElementById("query");
+    const sessionLog = document.getElementById("sessionLog");
+    const quickLinks = document.getElementById("quickLinks");
+    const presetSearches = document.getElementById("presetSearches");
+
+    const savedUnlocked = sessionStorage.getItem("blanksurf-unlocked") === "true";
+
+    function unlockUI() {
+      loginOverlay.classList.add("hidden");
+      app.classList.add("ready");
+      app.setAttribute("aria-hidden", "false");
+      setTimeout(() => loginOverlay.remove(), 700);
+      sessionStorage.setItem("blanksurf-unlocked", "true");
+      queryInput.focus();
+    }
+
+    function handleLogin() {
+      const value = passwordInput.value.trim();
+      if (value === PASSWORD) {
+        errorMsg.textContent = "";
+        unlockUI();
+      } else {
+        errorMsg.textContent = "Wrong key. Hint: capital T.";
+        loginCard.classList.remove("shake");
+        // Trigger reflow to replay the animation
+        void loginCard.offsetWidth;
+        loginCard.classList.add("shake");
+      }
+    }
+
+    function normaliseTarget(input) {
+      const looksLikeUrl = /\./.test(input) && !/\s/.test(input);
+      if (looksLikeUrl) {
+        const hasProtocol = /^https?:\/\//i.test(input);
+        return hasProtocol ? input : `https://${input}`;
+      }
+      return `https://duckduckgo.com/?q=${encodeURIComponent(input)}`;
+    }
+
+    function openAboutBlank(targetUrl) {
+      const popup = window.open("about:blank");
+      if (!popup) {
+        alert("Please allow pop-ups to launch the about:blank experience.");
+        return;
+      }
+
+      const safeHTML = `<!DOCTYPE html><html><head><title>BlankSurf</title><style>
+        html,body{margin:0;height:100%;background:#050816;overflow:hidden;color:#cfe4ff;font-family:Inter,system-ui,sans-serif;}
+        header{padding:12px 18px;background:linear-gradient(135deg,#0f172a,#0a0f26);display:flex;align-items:center;gap:10px;box-shadow:0 12px 35px rgba(0,0,0,0.45);}
+        header span{color:#8df1d6;font-weight:700;font-size:14px;letter-spacing:0.4px;}
+        iframe{width:100%;height:calc(100% - 50px);border:0;border-top:1px solid rgba(255,255,255,0.04);background:#0a0f26;}
+      </style></head><body>
+        <header><span>about:blank portal</span><div style="color:#7f91b4;font-size:13px;">${targetUrl}</div></header>
+        <iframe src="${targetUrl}" allow="fullscreen"></iframe>
+      </body></html>`;
+
+      popup.document.open();
+      popup.document.write(safeHTML);
+      popup.document.close();
+      addSessionLog(targetUrl);
+    }
+
+    function addSessionLog(target) {
+      const time = new Date().toLocaleTimeString();
+      sessionLog.textContent = `Last launch (${time}): ${target}`;
+    }
+
+    function createChip(label, action) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.textContent = label;
+      btn.addEventListener("click", action);
+      return btn;
+    }
+
+    const quickJumpSites = [
+      "https://orteil.dashnet.org/cookieclicker/",
+      "https://www.crazygames.com",
+      "https://retroworld.is-a.dev/",
+      "https://tetr.io/",
+      "https://www.chess.com/play/computer"
+    ];
+
+    quickJumpSites.forEach((site) => {
+      quickLinks.appendChild(
+        createChip(new URL(site).hostname.replace("www.", ""), () => openAboutBlank(site))
+      );
+    });
+
+    const presetIdeas = [
+      "free math games",
+      "calming lofi playlist",
+      "browser fps games",
+      "pixel art editor online",
+      "retro flash alternatives"
+    ];
+
+    presetIdeas.forEach((idea) => {
+      presetSearches.appendChild(
+        createChip(idea, () => openAboutBlank(normaliseTarget(idea)))
+      );
+    });
+
+    searchForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const target = normaliseTarget(queryInput.value.trim());
+      if (!target) return;
+      openAboutBlank(target);
+      queryInput.value = "";
+    });
+
+    loginBtn.addEventListener("click", handleLogin);
+    passwordInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        handleLogin();
+      }
+    });
+
+    if (savedUnlocked) {
+      unlockUI();
+    }
+  </script>
+</body>
+</html>
