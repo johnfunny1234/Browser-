@@ -218,13 +218,13 @@
 <body>
   <div class="shell">
     <header>
-      <div class="brand">GhostSurf <span class="tag">Stealth tab</span></div>
-      <div class="muted">Open sites through a blank tab</div>
+      <div class="brand">GhostSurf <span class="tag">Scramjet mode</span></div>
+      <div class="muted">Open sites through the Scramjet in-browser client</div>
     </header>
 
     <section class="card">
       <h2 class="title">Search or go</h2>
-      <p class="muted">Type a query or paste a URL. GhostSurf opens it in a fresh about:blank tab for fewer traces.</p>
+      <p class="muted">Type a query or paste a URL. GhostSurf opens it in a Scramjet tab so the outer address bar stays clean.</p>
       <form class="search" autocomplete="off">
         <div class="search-row">
           <input id="query" type="text" placeholder="Search the web or enter a link" />
@@ -258,6 +258,7 @@
   <script>
     const PASSWORD = "Theone42";
     const KEY_UNLOCKED = "ghostsurf-unlocked";
+    const SCRAMJET_ENDPOINT = "https://mercuryworkshop.github.io/scramjet/";
     const queryInput = document.getElementById("query");
     const statusEl = document.getElementById("status");
     const chipsEl = document.getElementById("chips");
@@ -305,12 +306,10 @@
       return `https://duckduckgo.com/?q=${encoded}`;
     }
 
-    function renderAboutBlank(popup, targetUrl) {
-      const safeUrl = targetUrl.replace(/"/g, "&quot;");
-      const frame = `<!doctype html><html><head><title>GhostSurf</title><style>html,body{margin:0;padding:0;width:100%;height:100%;background:#0a0c16;color:#e8efff;font-family:Inter,system-ui,sans-serif;}header{padding:10px 14px;display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.03);border-bottom:1px solid rgba(255,255,255,0.08);}header span{opacity:0.7;font-size:13px;}iframe{border:0;width:100%;height:calc(100% - 50px);display:block;}</style></head><body><header><strong>GhostSurf</strong><span>Running inside about:blank</span></header><iframe src="${safeUrl}" allowfullscreen referrerpolicy="no-referrer"></iframe></body></html>`;
-      popup.document.open();
-      popup.document.write(frame);
-      popup.document.close();
+    function buildScramjetUrl(targetUrl) {
+      const scramjetUrl = new URL(SCRAMJET_ENDPOINT);
+      scramjetUrl.searchParams.set("url", targetUrl);
+      return scramjetUrl.toString();
     }
 
     function launch(url) {
@@ -320,27 +319,30 @@
         return;
       }
 
-      const popup = window.open("about:blank", "_blank", "noopener,noreferrer");
+      const scramjetUrl = buildScramjetUrl(url);
+      const popup = window.open(scramjetUrl, "_blank", "noopener");
       if (!popup) {
-        setStatus("Popup blocked. Allow popups or use the quick link below.", "error");
-        addFallbackLink(url);
+        setStatus("Popup blocked. Allow popups or use a fallback link below.", "error");
+        addFallbackLink(scramjetUrl, true);
+        addFallbackLink(url, false);
         return;
       }
 
       try {
-        renderAboutBlank(popup, url);
-        setStatus("Opened inside about:blank.", "success");
+        setStatus("Opened through Scramjet.", "success");
       } catch (err) {
         console.warn(err);
-        setStatus("Could not render in about:blank. Use the direct link instead.", "error");
-        addFallbackLink(url);
+        setStatus("Could not render with Scramjet. Use the fallback links below.", "error");
+        addFallbackLink(scramjetUrl, true);
+        addFallbackLink(url, false);
       }
     }
 
-    function addFallbackLink(url) {
-      let label = "Open link directly";
+    function addFallbackLink(url, scramjetPreferred) {
+      let label = scramjetPreferred ? "Open with Scramjet" : "Open link directly";
       try {
-        label = `Open ${new URL(url).hostname}`;
+        const host = new URL(url).hostname;
+        label = scramjetPreferred ? `Open via Scramjet (${host})` : `Open ${host}`;
       } catch (_) {}
       const link = document.createElement("a");
       link.href = url;
