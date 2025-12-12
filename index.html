@@ -3,50 +3,50 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>GhostSurf</title>
+  <title>MARSHALL06178 | Scramjet Portal</title>
   <style>
     :root {
-      --bg: #050711;
-      --card: rgba(255, 255, 255, 0.05);
+      --bg: radial-gradient(circle at 20% 20%, rgba(103, 237, 198, 0.08), transparent 36%),
+        radial-gradient(circle at 82% 14%, rgba(129, 172, 255, 0.12), transparent 42%),
+        radial-gradient(circle at 48% 82%, rgba(129, 211, 255, 0.08), transparent 48%),
+        #050814;
+      --panel: rgba(255, 255, 255, 0.05);
+      --panel-strong: rgba(255, 255, 255, 0.08);
       --border: rgba(255, 255, 255, 0.08);
-      --text: #f2f5ff;
-      --muted: #9aa3bd;
-      --accent: #7ce7c8;
-      --accent-2: #7ab3ff;
+      --text: #f6f8ff;
+      --muted: #9fb1d3;
+      --accent: #7ee7c6;
+      --accent-2: #7fb3ff;
+      --accent-3: #ffda7f;
       --danger: #ff7b7b;
       --radius: 18px;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
       min-height: 100vh;
       font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
-      background: radial-gradient(circle at 15% 20%, rgba(124, 231, 200, 0.09), transparent 38%),
-        radial-gradient(circle at 80% 10%, rgba(122, 179, 255, 0.1), transparent 45%),
-        radial-gradient(circle at 45% 80%, rgba(124, 231, 200, 0.07), transparent 50%),
-        var(--bg);
+      background: var(--bg);
       color: var(--text);
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 32px 16px;
+      padding: 28px 14px 40px;
     }
 
     .shell {
-      width: min(720px, 100%);
-      background: linear-gradient(140deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+      width: min(1100px, 100%);
+      background: linear-gradient(150deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
       border: 1px solid var(--border);
       border-radius: 22px;
-      padding: 28px;
-      box-shadow: 0 18px 70px rgba(0, 0, 0, 0.45);
+      padding: 26px;
+      box-shadow: 0 20px 90px rgba(0, 0, 0, 0.55);
       backdrop-filter: blur(12px);
-      transform: translateY(14px);
+      transform: translateY(12px);
       opacity: 0;
-      animation: floatIn 600ms ease forwards;
+      animation: floatIn 700ms ease forwards;
     }
 
     header {
@@ -55,42 +55,49 @@
       align-items: center;
       gap: 12px;
       margin-bottom: 18px;
+      flex-wrap: wrap;
     }
 
     .brand {
-      font-size: 26px;
+      font-size: 30px;
       letter-spacing: 0.6px;
       display: flex;
       align-items: center;
-      gap: 10px;
-      font-weight: 700;
+      gap: 12px;
+      font-weight: 800;
     }
 
-    .tag {
+    .badge {
       padding: 6px 12px;
       border-radius: 999px;
-      background: rgba(124, 231, 200, 0.1);
+      background: rgba(124, 231, 200, 0.14);
       color: var(--accent);
       font-size: 12px;
       border: 1px solid rgba(124, 231, 200, 0.3);
     }
 
+    .hint { color: var(--muted); margin: 0; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 14px;
+    }
+
+    @media (max-width: 900px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+
     .card {
-      background: var(--card);
+      background: var(--panel);
       border: 1px solid var(--border);
       border-radius: var(--radius);
       padding: 18px;
       box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
     }
 
-    .card + .card { margin-top: 14px; }
-
-    .title {
-      font-size: 20px;
-      margin: 0 0 6px;
-    }
-
-    .muted { color: var(--muted); margin: 0 0 12px; }
+    .card h2 { margin: 0 0 8px; }
+    .card p { margin: 0 0 12px; color: var(--muted); }
 
     .search-row {
       display: grid;
@@ -104,7 +111,7 @@
       padding: 14px 16px;
       border-radius: 12px;
       border: 1px solid rgba(255, 255, 255, 0.12);
-      background: rgba(255, 255, 255, 0.04);
+      background: rgba(255, 255, 255, 0.05);
       color: var(--text);
       font-size: 15px;
       outline: none;
@@ -127,18 +134,20 @@
       font-weight: 700;
       letter-spacing: 0.3px;
       box-shadow: 0 14px 35px rgba(122, 179, 255, 0.28);
-      transition: transform 150ms ease, box-shadow 180ms ease;
+      transition: transform 150ms ease, box-shadow 180ms ease, filter 150ms ease;
     }
 
     button:hover { transform: translateY(-1px); box-shadow: 0 16px 40px rgba(124, 231, 200, 0.28); }
     button:active { transform: translateY(0); }
 
-    .chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 10px;
+    .button-ghost {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      box-shadow: none;
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
+
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
 
     .chip {
       padding: 8px 12px;
@@ -155,7 +164,7 @@
 
     .links {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       gap: 10px;
       margin-top: 10px;
     }
@@ -170,6 +179,7 @@
       transition: transform 140ms ease, border-color 160ms ease;
       display: block;
       cursor: pointer;
+      text-align: left;
     }
 
     .link-card:hover { transform: translateY(-1px); border-color: rgba(124, 231, 200, 0.5); }
@@ -184,6 +194,8 @@
     .status.error { color: var(--danger); }
     .status.success { color: var(--accent); }
 
+    .viewer-card { margin-top: 16px; }
+
     .viewer {
       margin-top: 12px;
       border-radius: 14px;
@@ -191,28 +203,53 @@
       overflow: hidden;
       background: rgba(255, 255, 255, 0.04);
       box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
-      transition: max-height 240ms ease, opacity 240ms ease;
+      transition: max-height 240ms ease, opacity 240ms ease, transform 180ms ease;
       max-height: 0;
       opacity: 0;
     }
 
-    .viewer.active {
-      max-height: 780px;
-      opacity: 1;
-    }
+    .viewer.active { max-height: 820px; opacity: 1; }
 
     .viewer iframe {
       display: block;
       width: 100%;
-      height: 720px;
+      height: 760px;
       border: none;
-      background: #0a0f1f;
+      background: #050a16;
     }
+
+    .viewer.fullscreen {
+      position: fixed;
+      inset: 16px;
+      max-height: none;
+      z-index: 9;
+      box-shadow: 0 22px 60px rgba(0, 0, 0, 0.55);
+      opacity: 1;
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .pill { padding: 8px 12px; border-radius: 10px; background: rgba(255, 255, 255, 0.05); color: var(--muted); font-size: 13px; }
+    .pill strong { color: var(--text); }
+    .pill.good { color: var(--accent); }
+
+    .stack { display: flex; gap: 10px; flex-wrap: wrap; }
+
+    .recent { margin-top: 14px; display: flex; flex-direction: column; gap: 8px; }
+    .recent-item { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--border); background: rgba(255, 255, 255, 0.03); }
+    .recent-item span { color: var(--muted); word-break: break-all; }
+
+    .caps { font-size: 12px; color: var(--danger); min-height: 16px; }
 
     .overlay {
       position: fixed;
       inset: 0;
-      background: rgba(5, 7, 17, 0.8);
+      background: rgba(5, 7, 17, 0.88);
       backdrop-filter: blur(12px);
       display: grid;
       place-items: center;
@@ -223,18 +260,21 @@
     .overlay.hide { opacity: 0; pointer-events: none; }
 
     .lock-card {
-      width: min(360px, 90vw);
+      width: min(420px, 92vw);
       padding: 22px;
       border-radius: 16px;
       background: rgba(255, 255, 255, 0.06);
       border: 1px solid rgba(255, 255, 255, 0.12);
       box-shadow: 0 14px 50px rgba(0, 0, 0, 0.35);
-      text-align: center;
       animation: floatIn 420ms ease;
     }
 
-    .lock-card h2 { margin: 0 0 10px; }
-    .lock-card p { margin: 0 0 14px; color: var(--muted); }
+    .lock-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 8px; }
+    .lock-card h2 { margin: 0; }
+    .lock-card p { margin: 0 0 12px; color: var(--muted); }
+
+    .pass-row { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; }
+    .toggle-pass { padding: 12px 14px; }
 
     @keyframes floatIn {
       from { opacity: 0; transform: translateY(16px); }
@@ -245,39 +285,64 @@
 <body>
   <div class="shell">
     <header>
-      <div class="brand">GhostSurf <span class="tag">Scramjet mode</span></div>
-      <div class="muted">Open sites through the Scramjet in-browser client</div>
+      <div class="brand">MARSHALL06178 <span class="badge">Scramjet embedded</span></div>
+      <p class="hint">Search, launch, and stay inside the MARSHALL06178 portal while Scramjet does the heavy lifting.</p>
     </header>
 
-    <section class="card">
-      <h2 class="title">Search or go</h2>
-      <p class="muted">Type a query or paste a URL. Scramjet loads right below so you stay on this page.</p>
-      <form class="search" autocomplete="off">
-        <div class="search-row">
-          <input id="query" type="text" placeholder="Search the web or enter a link" />
-          <button type="submit">Launch</button>
+    <div class="grid">
+      <section class="card">
+        <h2>Launch center</h2>
+        <p>Type a query or paste a URL. Everything stays inside this page with Scramjet.</p>
+        <form class="search" autocomplete="off">
+          <div class="search-row">
+            <input id="query" type="text" placeholder="Search the web or enter a link" />
+            <button type="submit">Open in Scramjet</button>
+          </div>
+        </form>
+        <div class="chips" id="chips"></div>
+        <div class="status" id="status"></div>
+        <div class="caps" id="caps-warning"></div>
+      </section>
+
+      <section class="card">
+        <h2>Quick deck</h2>
+        <p>Jump to popular destinations instantly.</p>
+        <div class="links" id="links"></div>
+        <div class="status" id="fallback"></div>
+      </section>
+    </div>
+
+    <section class="card viewer-card">
+      <div class="toolbar">
+        <div class="pill"><strong>Scramjet</strong> stays on this page</div>
+        <div class="pill good" id="toolbar-status">Idle</div>
+        <div class="stack">
+          <button type="button" class="button-ghost" id="reload">Reload</button>
+          <button type="button" class="button-ghost" id="open-direct">Open directly (embedded)</button>
+          <button type="button" class="button-ghost" id="fullscreen">Fullscreen</button>
+          <button type="button" class="button-ghost" id="clear">Clear frame</button>
         </div>
-      </form>
-      <div class="chips" id="chips"></div>
-      <div class="status" id="status"></div>
+      </div>
       <div class="viewer" id="viewer">
         <iframe id="scramjet-frame" title="Scramjet" loading="lazy" sandbox="allow-scripts allow-forms allow-same-origin allow-popups allow-downloads"></iframe>
       </div>
-    </section>
-
-    <section class="card">
-      <h3 class="title">Quick jumps</h3>
-      <p class="muted">Popular spots in one tap.</p>
-      <div class="links" id="links"></div>
+      <div class="recent" id="recent"></div>
     </section>
   </div>
 
   <div class="overlay" id="lock">
     <div class="lock-card">
-      <h2>Login required</h2>
-      <p>Enter the access password to unlock GhostSurf.</p>
+      <div class="lock-header">
+        <h2>Access MARSHALL06178</h2>
+        <span class="badge">Secure gate</span>
+      </div>
+      <p>Enter the access password to continue. Attempts are limited for better protection.</p>
       <form id="lock-form">
-        <input id="lock-pass" type="password" placeholder="Password" autocomplete="current-password" />
+        <div class="pass-row">
+          <input id="lock-pass" type="password" placeholder="Password" autocomplete="current-password" />
+          <button type="button" class="button-ghost toggle-pass" id="toggle-pass">Show</button>
+        </div>
+        <div class="caps" id="lock-caps"></div>
         <div style="height: 10px"></div>
         <button type="submit" style="width: 100%">Unlock</button>
       </form>
@@ -287,7 +352,7 @@
 
   <script>
     const PASSWORD = "Theone42";
-    const KEY_UNLOCKED = "ghostsurf-unlocked";
+    const KEY_UNLOCKED = "marshall-unlocked";
     const SCRAMJET_ENDPOINT = "https://mercuryworkshop.github.io/scramjet/";
     const queryInput = document.getElementById("query");
     const statusEl = document.getElementById("status");
@@ -298,7 +363,21 @@
     const lockLayer = document.getElementById("lock");
     const lockStatus = document.getElementById("lock-status");
     const lockPass = document.getElementById("lock-pass");
+    const lockCaps = document.getElementById("lock-caps");
+    const togglePass = document.getElementById("toggle-pass");
+    const capsWarning = document.getElementById("caps-warning");
+    const fallbackStatus = document.getElementById("fallback");
+    const toolbarStatus = document.getElementById("toolbar-status");
+    const recentEl = document.getElementById("recent");
+    const reloadBtn = document.getElementById("reload");
+    const openDirectBtn = document.getElementById("open-direct");
+    const fullscreenBtn = document.getElementById("fullscreen");
+    const clearBtn = document.getElementById("clear");
     let loadTimer;
+    let currentUrl = "";
+    let recentItems = [];
+    let attempts = 0;
+    let lockoutUntil = 0;
 
     const presets = [
       "fun free games",
@@ -321,6 +400,8 @@
     function setStatus(msg, type = "") {
       statusEl.textContent = msg;
       statusEl.className = `status ${type}`;
+      toolbarStatus.textContent = msg || "Idle";
+      toolbarStatus.className = `pill ${type === "error" ? "" : "good"}`;
     }
 
     function setLockStatus(msg, type = "") {
@@ -342,6 +423,7 @@
     function buildScramjetUrl(targetUrl) {
       const scramjetUrl = new URL(SCRAMJET_ENDPOINT);
       scramjetUrl.searchParams.set("url", targetUrl);
+      scramjetUrl.searchParams.set("embed", "1");
       return scramjetUrl.toString();
     }
 
@@ -349,6 +431,35 @@
       if (!viewer.classList.contains("active")) {
         viewer.classList.add("active");
       }
+    }
+
+    function pushRecent(url) {
+      if (!url) return;
+      recentItems = [url, ...recentItems.filter((item) => item !== url)].slice(0, 6);
+      renderRecent();
+    }
+
+    function renderRecent() {
+      recentEl.innerHTML = "";
+      if (!recentItems.length) return;
+      recentItems.forEach((url) => {
+        const item = document.createElement("div");
+        item.className = "recent-item";
+        const span = document.createElement("span");
+        span.textContent = url;
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "button-ghost";
+        btn.textContent = "Re-open";
+        btn.addEventListener("click", () => launch(url));
+        item.append(span, btn);
+        recentEl.appendChild(item);
+      });
+    }
+
+    function setCapsIndicator(event, target) {
+      const active = event.getModifierState && event.getModifierState("CapsLock");
+      target.textContent = active ? "Caps Lock is on" : "";
     }
 
     function launch(url) {
@@ -363,34 +474,52 @@
       }
 
       const scramjetUrl = buildScramjetUrl(url);
+      currentUrl = url;
       showFrame();
       setStatus("Loading with Scramjet...", "");
       frame.src = scramjetUrl;
+      fallbackStatus.textContent = "";
       loadTimer = setTimeout(() => {
-        setStatus("If it looks stuck, use the fallback links below.", "error");
-        addFallbackLink(scramjetUrl, true);
-        addFallbackLink(url, false);
+        setStatus("If it looks stuck, try reloading or open directly in-frame.", "error");
+        addFallbackActions(scramjetUrl, url);
       }, 8000);
 
       frame.onload = () => {
         clearTimeout(loadTimer);
-        setStatus("Running inside Scramjet.", "success");
+        setStatus("Running inside Scramjet (stays on this page).", "success");
+        pushRecent(url);
       };
     }
 
-    function addFallbackLink(url, scramjetPreferred) {
-      let label = scramjetPreferred ? "Open with Scramjet" : "Open link directly";
-      try {
-        const host = new URL(url).hostname;
-        label = scramjetPreferred ? `Open via Scramjet (${host})` : `Open ${host}`;
-      } catch (_) {}
-      const link = document.createElement("a");
-      link.href = url;
-      link.textContent = label;
-      link.className = "link-card";
-      link.target = "_blank";
-      link.rel = "noreferrer";
-      linksEl.prepend(link);
+    function addFallbackActions(scramjetUrl, directUrl) {
+      fallbackStatus.textContent = "";
+      const wrap = document.createElement("div");
+      wrap.className = "stack";
+
+      const scramjetBtn = document.createElement("button");
+      scramjetBtn.type = "button";
+      scramjetBtn.className = "button-ghost";
+      scramjetBtn.textContent = "Retry Scramjet here";
+      scramjetBtn.addEventListener("click", () => launch(directUrl));
+
+      const directBtn = document.createElement("button");
+      directBtn.type = "button";
+      directBtn.className = "button-ghost";
+      directBtn.textContent = "Open directly in-frame";
+      directBtn.addEventListener("click", () => openDirect(directUrl));
+
+      wrap.append(scramjetBtn, directBtn);
+      fallbackStatus.appendChild(wrap);
+    }
+
+    function openDirect(url) {
+      if (!url) {
+        setStatus("No URL to open yet.", "error");
+        return;
+      }
+      showFrame();
+      frame.src = url;
+      setStatus("Opening without Scramjet (embedded).", "");
     }
 
     document.querySelector("form.search").addEventListener("submit", (e) => {
@@ -417,9 +546,39 @@
       btn.type = "button";
       btn.textContent = label;
       btn.className = "link-card";
-      btn.style.textAlign = "left";
       btn.addEventListener("click", () => launch(url));
       linksEl.appendChild(btn);
+    });
+
+    reloadBtn.addEventListener("click", () => {
+      if (!currentUrl) {
+        setStatus("Nothing to reload yet.", "error");
+        return;
+      }
+      launch(currentUrl);
+    });
+
+    openDirectBtn.addEventListener("click", () => openDirect(currentUrl));
+
+    fullscreenBtn.addEventListener("click", () => {
+      viewer.classList.toggle("fullscreen");
+      fullscreenBtn.textContent = viewer.classList.contains("fullscreen") ? "Exit fullscreen" : "Fullscreen";
+    });
+
+    clearBtn.addEventListener("click", () => {
+      frame.src = "about:blank";
+      setStatus("Viewer cleared.", "");
+      currentUrl = "";
+    });
+
+    queryInput.addEventListener("keydown", (event) => setCapsIndicator(event, capsWarning));
+    lockPass.addEventListener("keydown", (event) => setCapsIndicator(event, lockCaps));
+
+    togglePass.addEventListener("click", () => {
+      const isText = lockPass.type === "text";
+      lockPass.type = isText ? "password" : "text";
+      togglePass.textContent = isText ? "Show" : "Hide";
+      lockPass.focus();
     });
 
     function unlock() {
@@ -427,17 +586,44 @@
       setTimeout(() => lockLayer.remove(), 260);
       queryInput.focus();
       localStorage.setItem(KEY_UNLOCKED, "1");
+      setStatus("Unlocked. Ready to launch.", "success");
+    }
+
+    function applyLockout(durationMs) {
+      lockoutUntil = Date.now() + durationMs;
+      lockPass.disabled = true;
+      togglePass.disabled = true;
+      setLockStatus(`Locked for ${Math.round(durationMs / 1000)} seconds.`, "error");
+      const interval = setInterval(() => {
+        const remaining = lockoutUntil - Date.now();
+        if (remaining <= 0) {
+          clearInterval(interval);
+          lockPass.disabled = false;
+          togglePass.disabled = false;
+          setLockStatus("Try again.", "");
+          lockPass.focus();
+        } else {
+          setLockStatus(`Locked for ${Math.ceil(remaining / 1000)} seconds...`, "error");
+        }
+      }, 500);
     }
 
     document.getElementById("lock-form").addEventListener("submit", (e) => {
       e.preventDefault();
+      if (Date.now() < lockoutUntil) return;
       const val = lockPass.value.trim();
       if (val === PASSWORD) {
         setLockStatus("Unlocked.", "success");
         unlock();
       } else {
-        setLockStatus("Wrong password.", "error");
+        attempts += 1;
+        const left = Math.max(0, 5 - attempts);
+        setLockStatus(left ? `Wrong password. ${left} tries left.` : "Too many attempts.", "error");
         lockPass.focus();
+        if (!left) {
+          applyLockout(30000);
+          attempts = 0;
+        }
       }
     });
 
