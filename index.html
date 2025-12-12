@@ -1,0 +1,955 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MARSHALL06178 | Scramjet Portal</title>
+  <style>
+    :root {
+      --bg: radial-gradient(circle at 20% 20%, rgba(103, 237, 198, 0.08), transparent 36%),
+        radial-gradient(circle at 82% 14%, rgba(129, 172, 255, 0.12), transparent 42%),
+        radial-gradient(circle at 48% 82%, rgba(129, 211, 255, 0.08), transparent 48%),
+        #050814;
+      --panel: rgba(255, 255, 255, 0.05);
+      --panel-strong: rgba(255, 255, 255, 0.08);
+      --border: rgba(255, 255, 255, 0.08);
+      --text: #f6f8ff;
+      --muted: #9fb1d3;
+      --accent: #7ee7c6;
+      --accent-2: #7fb3ff;
+      --accent-3: #ffda7f;
+      --danger: #ff7b7b;
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 28px 14px 40px;
+    }
+
+    .shell {
+      width: min(1120px, 100%);
+      background: linear-gradient(150deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 26px;
+      box-shadow: 0 20px 90px rgba(0, 0, 0, 0.55);
+      backdrop-filter: blur(12px);
+      transform: translateY(12px);
+      opacity: 0;
+      animation: floatIn 700ms ease forwards;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      font-size: 30px;
+      letter-spacing: 0.6px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+    }
+
+    .badge {
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(124, 231, 200, 0.14);
+      color: var(--accent);
+      font-size: 12px;
+      border: 1px solid rgba(124, 231, 200, 0.3);
+    }
+
+    .hint { color: var(--muted); margin: 0; }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin: 10px 0 20px;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      padding: 11px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+      cursor: pointer;
+      transition: transform 150ms ease, border-color 160ms ease, box-shadow 180ms ease;
+    }
+
+    .tab-btn.active {
+      border-color: var(--accent);
+      box-shadow: 0 12px 30px rgba(126, 231, 198, 0.16);
+      transform: translateY(-1px);
+    }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 14px;
+    }
+
+    @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+      margin-bottom: 12px;
+    }
+
+    .card h2 { margin: 0 0 8px; }
+    .card p { margin: 0 0 12px; color: var(--muted); }
+
+    .search-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+    }
+
+    input[type="text"], input[type="password"], select {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      font-size: 15px;
+      outline: none;
+      transition: border-color 160ms ease, transform 160ms ease, box-shadow 180ms ease;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--accent);
+      transform: translateY(-1px);
+      box-shadow: 0 10px 24px rgba(124, 231, 200, 0.16);
+    }
+
+    button {
+      padding: 13px 18px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #041220;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      box-shadow: 0 14px 35px rgba(122, 179, 255, 0.28);
+      transition: transform 150ms ease, box-shadow 180ms ease, filter 150ms ease;
+    }
+
+    button:hover { transform: translateY(-1px); box-shadow: 0 16px 40px rgba(124, 231, 200, 0.28); }
+    button:active { transform: translateY(0); }
+
+    .button-ghost {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      box-shadow: none;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+
+    .chip {
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text);
+      font-size: 13px;
+      cursor: pointer;
+      transition: transform 140ms ease, border-color 160ms ease;
+    }
+
+    .chip:hover { transform: translateY(-1px); border-color: rgba(124, 231, 200, 0.4); }
+
+    .links { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 10px; }
+
+    .link-card {
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      padding: 12px 14px;
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text);
+      text-decoration: none;
+      transition: transform 140ms ease, border-color 160ms ease;
+      display: block;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .link-card:hover { transform: translateY(-1px); border-color: rgba(124, 231, 200, 0.5); }
+
+    .status { margin-top: 10px; color: var(--muted); font-size: 14px; min-height: 20px; }
+    .status.error { color: var(--danger); }
+    .status.success { color: var(--accent); }
+
+    .viewer-card { margin-top: 10px; }
+
+    .viewer {
+      margin-top: 12px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.04);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+      transition: max-height 240ms ease, opacity 240ms ease, transform 180ms ease;
+      max-height: 0;
+      opacity: 0;
+    }
+
+    .viewer.active { max-height: 820px; opacity: 1; }
+
+    .viewer iframe {
+      display: block;
+      width: 100%;
+      height: 760px;
+      border: none;
+      background: #050a16;
+    }
+
+    .viewer.fullscreen {
+      position: fixed;
+      inset: 16px;
+      max-height: none;
+      z-index: 9;
+      box-shadow: 0 22px 60px rgba(0, 0, 0, 0.55);
+      opacity: 1;
+    }
+
+    .toolbar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+    .pill { padding: 8px 12px; border-radius: 10px; background: rgba(255, 255, 255, 0.05); color: var(--muted); font-size: 13px; }
+    .pill strong { color: var(--text); }
+    .pill.good { color: var(--accent); }
+
+    .stack { display: flex; gap: 10px; flex-wrap: wrap; }
+
+    .recent { margin-top: 14px; display: flex; flex-direction: column; gap: 8px; }
+    .recent-item { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--border); background: rgba(255, 255, 255, 0.03); }
+    .recent-item span { color: var(--muted); word-break: break-all; }
+
+    .caps { font-size: 12px; color: var(--danger); min-height: 16px; }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 7, 17, 0.88);
+      backdrop-filter: blur(12px);
+      display: grid;
+      place-items: center;
+      z-index: 10;
+      transition: opacity 240ms ease;
+    }
+
+    .overlay.hide { opacity: 0; pointer-events: none; }
+
+    .lock-card {
+      width: min(420px, 92vw);
+      padding: 22px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 14px 50px rgba(0, 0, 0, 0.35);
+      animation: floatIn 420ms ease;
+    }
+
+    .lock-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 8px; }
+    .lock-card h2 { margin: 0; }
+    .lock-card p { margin: 0 0 12px; color: var(--muted); }
+
+    .pass-row { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; }
+    .toggle-pass { padding: 12px 14px; }
+
+    .settings-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
+    .settings-item { border: 1px dashed var(--border); border-radius: 12px; padding: 12px; background: rgba(255, 255, 255, 0.03); }
+
+    .admin-locked { border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 10px; background: rgba(255, 255, 255, 0.02); color: var(--muted); }
+
+    @keyframes floatIn {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <div class="brand">MARSHALL06178 <span class="badge">Scramjet embedded</span></div>
+      <p class="hint">Simpler tabbed control center with Scramjet, shortcuts, settings, and admin tools.</p>
+    </header>
+
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="launch">Launch</button>
+      <button class="tab-btn" data-tab="shortcuts">Shortcuts</button>
+      <button class="tab-btn" data-tab="settings">Settings</button>
+      <button class="tab-btn" data-tab="admin">Admin panel</button>
+    </div>
+
+    <section class="tab-panel active" id="tab-launch">
+      <div class="grid">
+        <section class="card">
+          <h2>Launch center</h2>
+          <p>Type a query or paste a URL. Everything stays inside this page with Scramjet.</p>
+          <form class="search" autocomplete="off">
+            <div class="search-row">
+              <input id="query" type="text" placeholder="Search the web or enter a link" />
+              <button type="submit">Open in Scramjet</button>
+            </div>
+          </form>
+          <div class="chips" id="chips"></div>
+          <div class="status" id="status"></div>
+          <div class="caps" id="caps-warning"></div>
+        </section>
+
+        <section class="card">
+          <h2>Quick deck</h2>
+          <p>Jump to popular destinations instantly.</p>
+          <div class="links" id="links"></div>
+          <div class="status" id="fallback"></div>
+        </section>
+      </div>
+
+      <section class="card viewer-card">
+        <div class="toolbar">
+          <div class="pill"><strong>Scramjet</strong> stays on this page</div>
+          <div class="pill good" id="toolbar-status">Idle</div>
+          <div class="stack">
+            <button type="button" class="button-ghost" id="reload">Reload</button>
+            <button type="button" class="button-ghost" id="open-direct">Open directly (embedded)</button>
+            <button type="button" class="button-ghost" id="fullscreen">Fullscreen</button>
+            <button type="button" class="button-ghost" id="clear">Clear frame</button>
+          </div>
+        </div>
+        <div class="viewer" id="viewer">
+          <iframe id="scramjet-frame" title="Scramjet" loading="lazy" sandbox="allow-scripts allow-forms allow-same-origin allow-popups allow-downloads"></iframe>
+        </div>
+        <div class="recent" id="recent"></div>
+      </section>
+    </section>
+
+    <section class="tab-panel" id="tab-shortcuts">
+      <section class="card">
+        <h2>Game launchpad</h2>
+        <p>Shortcut tabs for fast play. Use Scramjet embedding for each launch.</p>
+        <div class="links" id="game-links"></div>
+      </section>
+      <section class="card">
+        <h2>Study & sandbox</h2>
+        <p>Trusted resources that load nicely in the embedded frame.</p>
+        <div class="links" id="study-links"></div>
+      </section>
+    </section>
+
+    <section class="tab-panel" id="tab-settings">
+      <section class="card">
+        <h2>Appearance & behavior</h2>
+        <p>Pick a theme and tune how the portal responds.</p>
+        <div class="settings-list">
+          <div class="settings-item">
+            <label for="theme">Theme</label>
+            <select id="theme"></select>
+            <div class="status" id="theme-status"></div>
+          </div>
+          <div class="settings-item">
+            <label><input type="checkbox" id="reduced-motion" /> Reduce motion</label>
+            <p class="hint">Turns off oversized animations for lower-distraction use.</p>
+          </div>
+          <div class="settings-item">
+            <label><input type="checkbox" id="remember-sessions" checked /> Remember unlock & theme</label>
+            <p class="hint">Stores your unlock, theme, and last URL locally.</p>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <section class="tab-panel" id="tab-admin">
+      <section class="card">
+        <h2>Admin panel</h2>
+        <p>Enter the admin key (FWKZT.MARSHALL) to reveal advanced controls.</p>
+        <div class="pass-row">
+          <input id="admin-pass" type="password" placeholder="Admin password" autocomplete="off" />
+          <button type="button" class="button-ghost" id="admin-unlock">Open</button>
+        </div>
+        <div class="caps" id="admin-caps"></div>
+        <div class="status" id="admin-status"></div>
+        <div id="admin-content" class="admin-locked">Locked. Enter the admin password to manage Scramjet tools.</div>
+      </section>
+    </section>
+  </div>
+
+  <div class="overlay" id="lock">
+    <div class="lock-card">
+      <div class="lock-header">
+        <h2>Access MARSHALL06178</h2>
+        <span class="badge">Secure gate</span>
+      </div>
+      <p>Enter the access password to continue. Attempts are limited for better protection.</p>
+      <form id="lock-form">
+        <div class="pass-row">
+          <input id="lock-pass" type="password" placeholder="Password" autocomplete="current-password" />
+          <button type="button" class="button-ghost toggle-pass" id="toggle-pass">Show</button>
+        </div>
+        <div class="caps" id="lock-caps"></div>
+        <div style="height: 10px"></div>
+        <button type="submit" style="width: 100%">Unlock</button>
+      </form>
+      <div class="status" id="lock-status"></div>
+    </div>
+  </div>
+
+  <script>
+    const PASSWORD = "Theone42";
+    const ADMIN_PASSWORD = "FWKZT.MARSHALL";
+    const KEY_UNLOCKED = "marshall-unlocked";
+    const KEY_THEME = "marshall-theme";
+    const KEY_RECENT = "marshall-recent";
+    const SCRAMJET_ENDPOINT = "https://mercuryworkshop.github.io/scramjet/";
+    const queryInput = document.getElementById("query");
+    const statusEl = document.getElementById("status");
+    const chipsEl = document.getElementById("chips");
+    const linksEl = document.getElementById("links");
+    const viewer = document.getElementById("viewer");
+    const frame = document.getElementById("scramjet-frame");
+    const lockLayer = document.getElementById("lock");
+    const lockStatus = document.getElementById("lock-status");
+    const lockPass = document.getElementById("lock-pass");
+    const lockCaps = document.getElementById("lock-caps");
+    const togglePass = document.getElementById("toggle-pass");
+    const capsWarning = document.getElementById("caps-warning");
+    const fallbackStatus = document.getElementById("fallback");
+    const toolbarStatus = document.getElementById("toolbar-status");
+    const recentEl = document.getElementById("recent");
+    const reloadBtn = document.getElementById("reload");
+    const openDirectBtn = document.getElementById("open-direct");
+    const fullscreenBtn = document.getElementById("fullscreen");
+    const clearBtn = document.getElementById("clear");
+    const tabs = document.querySelectorAll(".tab-btn");
+    const panels = document.querySelectorAll(".tab-panel");
+    const themeSelect = document.getElementById("theme");
+    const themeStatus = document.getElementById("theme-status");
+    const reducedMotion = document.getElementById("reduced-motion");
+    const rememberSessions = document.getElementById("remember-sessions");
+    const adminPass = document.getElementById("admin-pass");
+    const adminUnlock = document.getElementById("admin-unlock");
+    const adminStatus = document.getElementById("admin-status");
+    const adminCaps = document.getElementById("admin-caps");
+    const adminContent = document.getElementById("admin-content");
+    const gameLinksEl = document.getElementById("game-links");
+    const studyLinksEl = document.getElementById("study-links");
+    let loadTimer;
+    let currentUrl = "";
+    let recentItems = [];
+    let attempts = 0;
+    let lockoutUntil = 0;
+    let adminUnlocked = false;
+
+    const themes = {
+      origin: {
+        label: "Origin (default)",
+        values: {
+          "--bg": "radial-gradient(circle at 20% 20%, rgba(103, 237, 198, 0.08), transparent 36%), radial-gradient(circle at 82% 14%, rgba(129, 172, 255, 0.12), transparent 42%), radial-gradient(circle at 48% 82%, rgba(129, 211, 255, 0.08), transparent 48%), #050814",
+          "--accent": "#7ee7c6",
+          "--accent-2": "#7fb3ff",
+          "--accent-3": "#ffda7f",
+          "--panel": "rgba(255, 255, 255, 0.05)",
+          "--panel-strong": "rgba(255, 255, 255, 0.08)",
+          "--border": "rgba(255, 255, 255, 0.08)",
+          "--text": "#f6f8ff",
+          "--muted": "#9fb1d3",
+          "--danger": "#ff7b7b"
+        },
+      },
+      neon: {
+        label: "Neon Vapor",
+        values: {
+          "--bg": "radial-gradient(circle at 18% 22%, rgba(255, 0, 214, 0.12), transparent 42%), radial-gradient(circle at 80% 16%, rgba(90, 255, 255, 0.18), transparent 44%), linear-gradient(135deg, #090313, #0a1a2b)",
+          "--accent": "#ff7dff",
+          "--accent-2": "#6af7ff",
+          "--accent-3": "#f5ff7a",
+          "--panel": "rgba(255, 255, 255, 0.04)",
+          "--panel-strong": "rgba(255, 255, 255, 0.07)",
+          "--border": "rgba(255, 255, 255, 0.12)",
+          "--text": "#f5f6ff",
+          "--muted": "#b5c3ff",
+          "--danger": "#ff8ba3"
+        },
+      },
+      dusk: {
+        label: "Dusk Matte",
+        values: {
+          "--bg": "radial-gradient(circle at 12% 18%, rgba(255, 187, 110, 0.12), transparent 36%), radial-gradient(circle at 76% 12%, rgba(108, 210, 255, 0.18), transparent 44%), linear-gradient(145deg, #0d111a, #161b27)",
+          "--accent": "#ffd08a",
+          "--accent-2": "#8ad8ff",
+          "--accent-3": "#baffc3",
+          "--panel": "rgba(255, 255, 255, 0.04)",
+          "--panel-strong": "rgba(255, 255, 255, 0.07)",
+          "--border": "rgba(255, 255, 255, 0.1)",
+          "--text": "#f7f2e9",
+          "--muted": "#c7c1b3",
+          "--danger": "#ff9b7b"
+        },
+      },
+      focus: {
+        label: "Focus Green",
+        values: {
+          "--bg": "radial-gradient(circle at 12% 18%, rgba(170, 255, 199, 0.2), transparent 36%), radial-gradient(circle at 76% 12%, rgba(117, 203, 255, 0.14), transparent 42%), linear-gradient(160deg, #05160f, #0b1e16)",
+          "--accent": "#8fffb5",
+          "--accent-2": "#5ed6ff",
+          "--accent-3": "#ffe59f",
+          "--panel": "rgba(255, 255, 255, 0.05)",
+          "--panel-strong": "rgba(255, 255, 255, 0.08)",
+          "--border": "rgba(255, 255, 255, 0.12)",
+          "--text": "#eafff2",
+          "--muted": "#a7cbbb",
+          "--danger": "#ff8b8b"
+        },
+      },
+    };
+
+    const presets = [
+      "fun free games",
+      "retro emulators",
+      "math puzzles",
+      "space news",
+      "cool wallpapers",
+      "coding sandboxes",
+      "browser arcades"
+    ];
+
+    const quickLinks = [
+      { label: "Itch.io games", url: "https://itch.io/games" },
+      { label: "Classic Reload", url: "https://www.classicreload.com/" },
+      { label: "CoolMath Games", url: "https://www.coolmathgames.com/" },
+      { label: "CrazyGames", url: "https://www.crazygames.com/" },
+      { label: "Poki", url: "https://poki.com" },
+      { label: "Archive.org", url: "https://archive.org/" },
+      { label: "Wikipedia", url: "https://wikipedia.org" },
+      { label: "YouTube", url: "https://youtube.com" }
+    ];
+
+    const gameLinks = [
+      { label: "Snokido", url: "https://www.snokido.com/" },
+      { label: "Armor Games", url: "https://armorgames.com/" },
+      { label: "Miniclip archive", url: "https://www.miniclip.com/games/en/" },
+      { label: "Unblocked Hub", url: "https://sites.google.com/view/theunblockedhub/home" },
+      { label: "Pixel warfare", url: "https://www.crazygames.com/game/pixel-warfare" },
+      { label: "Slope", url: "https://www.y8.com/games/slope" }
+    ];
+
+    const studyLinks = [
+      { label: "Desmos", url: "https://www.desmos.com/calculator" },
+      { label: "Replit", url: "https://replit.com/~" },
+      { label: "MDN Web Docs", url: "https://developer.mozilla.org/" },
+      { label: "Khan Academy", url: "https://www.khanacademy.org/" },
+      { label: "StackBlitz", url: "https://stackblitz.com/" },
+      { label: "NASA space", url: "https://www.nasa.gov/" }
+    ];
+
+    function setStatus(msg, type = "") {
+      statusEl.textContent = msg;
+      statusEl.className = `status ${type}`;
+      toolbarStatus.textContent = msg || "Idle";
+      toolbarStatus.className = `pill ${type === "error" ? "" : "good"}`;
+    }
+
+    function setLockStatus(msg, type = "") {
+      lockStatus.textContent = msg;
+      lockStatus.className = `status ${type}`;
+    }
+
+    function normalizeQuery(input) {
+      const value = input.trim();
+      if (!value) return "";
+      const looksLikeUrl = /\./.test(value) && !/\s/.test(value);
+      if (looksLikeUrl) {
+        return value.startsWith("http://") || value.startsWith("https://") ? value : `https://${value}`;
+      }
+      const encoded = encodeURIComponent(value);
+      return `https://duckduckgo.com/?q=${encoded}`;
+    }
+
+    function buildScramjetUrl(targetUrl) {
+      const scramjetUrl = new URL(SCRAMJET_ENDPOINT);
+      scramjetUrl.searchParams.set("url", targetUrl);
+      scramjetUrl.searchParams.set("embed", "1");
+      return scramjetUrl.toString();
+    }
+
+    function showFrame() { viewer.classList.add("active"); }
+
+    function pushRecent(url) {
+      if (!url) return;
+      recentItems = [url, ...recentItems.filter((item) => item !== url)].slice(0, 6);
+      renderRecent();
+      if (rememberSessions.checked) {
+        localStorage.setItem(KEY_RECENT, JSON.stringify(recentItems));
+      }
+    }
+
+    function renderRecent() {
+      recentEl.innerHTML = "";
+      if (!recentItems.length) return;
+      recentItems.forEach((url) => {
+        const item = document.createElement("div");
+        item.className = "recent-item";
+        const span = document.createElement("span");
+        span.textContent = url;
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "button-ghost";
+        btn.textContent = "Re-open";
+        btn.addEventListener("click", () => launch(url));
+        item.append(span, btn);
+        recentEl.appendChild(item);
+      });
+    }
+
+    function setCapsIndicator(event, target) {
+      const active = event.getModifierState && event.getModifierState("CapsLock");
+      target.textContent = active ? "Caps Lock is on" : "";
+    }
+
+    function launch(url) {
+      if (!url) {
+        setStatus("Type something first.", "error");
+        queryInput.focus();
+        return;
+      }
+
+      if (loadTimer) {
+        clearTimeout(loadTimer);
+      }
+
+      const scramjetUrl = buildScramjetUrl(url);
+      currentUrl = url;
+      showFrame();
+      setStatus("Loading with Scramjet...", "");
+      frame.src = scramjetUrl;
+      fallbackStatus.textContent = "";
+      loadTimer = setTimeout(() => {
+        setStatus("If it looks stuck, try reloading or open directly in-frame.", "error");
+        addFallbackActions(scramjetUrl, url);
+      }, 8000);
+
+      frame.onload = () => {
+        clearTimeout(loadTimer);
+        setStatus("Running inside Scramjet (stays on this page).", "success");
+        pushRecent(url);
+      };
+
+      if (rememberSessions.checked) {
+        localStorage.setItem("marshall-last", url);
+      }
+    }
+
+    function addFallbackActions(scramjetUrl, directUrl) {
+      fallbackStatus.textContent = "";
+      const wrap = document.createElement("div");
+      wrap.className = "stack";
+
+      const scramjetBtn = document.createElement("button");
+      scramjetBtn.type = "button";
+      scramjetBtn.className = "button-ghost";
+      scramjetBtn.textContent = "Retry Scramjet here";
+      scramjetBtn.addEventListener("click", () => launch(directUrl));
+
+      const directBtn = document.createElement("button");
+      directBtn.type = "button";
+      directBtn.className = "button-ghost";
+      directBtn.textContent = "Open directly in-frame";
+      directBtn.addEventListener("click", () => openDirect(directUrl));
+
+      wrap.append(scramjetBtn, directBtn);
+      fallbackStatus.appendChild(wrap);
+    }
+
+    function openDirect(url) {
+      if (!url) {
+        setStatus("No URL to open yet.", "error");
+        return;
+      }
+      showFrame();
+      frame.src = url;
+      setStatus("Opening without Scramjet (embedded).", "");
+    }
+
+    document.querySelector("form.search").addEventListener("submit", (e) => {
+      e.preventDefault();
+      setStatus("Launching...", "");
+      const url = normalizeQuery(queryInput.value);
+      launch(url);
+    });
+
+    presets.forEach((text) => {
+      const chip = document.createElement("button");
+      chip.type = "button";
+      chip.textContent = text;
+      chip.className = "chip";
+      chip.addEventListener("click", () => {
+        queryInput.value = text;
+        queryInput.focus();
+      });
+      chipsEl.appendChild(chip);
+    });
+
+    quickLinks.forEach(({ label, url }) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.textContent = label;
+      btn.className = "link-card";
+      btn.addEventListener("click", () => launch(url));
+      linksEl.appendChild(btn);
+    });
+
+    gameLinks.forEach(({ label, url }) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.textContent = label;
+      btn.className = "link-card";
+      btn.addEventListener("click", () => launch(url));
+      gameLinksEl.appendChild(btn);
+    });
+
+    studyLinks.forEach(({ label, url }) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.textContent = label;
+      btn.className = "link-card";
+      btn.addEventListener("click", () => launch(url));
+      studyLinksEl.appendChild(btn);
+    });
+
+    reloadBtn.addEventListener("click", () => {
+      if (!currentUrl) {
+        setStatus("Nothing to reload yet.", "error");
+        return;
+      }
+      launch(currentUrl);
+    });
+
+    openDirectBtn.addEventListener("click", () => openDirect(currentUrl));
+
+    fullscreenBtn.addEventListener("click", () => {
+      viewer.classList.toggle("fullscreen");
+      fullscreenBtn.textContent = viewer.classList.contains("fullscreen") ? "Exit fullscreen" : "Fullscreen";
+    });
+
+    clearBtn.addEventListener("click", () => {
+      frame.src = "about:blank";
+      setStatus("Viewer cleared.", "");
+      currentUrl = "";
+    });
+
+    queryInput.addEventListener("keydown", (event) => setCapsIndicator(event, capsWarning));
+    lockPass.addEventListener("keydown", (event) => setCapsIndicator(event, lockCaps));
+    adminPass.addEventListener("keydown", (event) => setCapsIndicator(event, adminCaps));
+
+    togglePass.addEventListener("click", () => {
+      const isText = lockPass.type === "text";
+      lockPass.type = isText ? "password" : "text";
+      togglePass.textContent = isText ? "Show" : "Hide";
+      lockPass.focus();
+    });
+
+    function unlock() {
+      lockLayer.classList.add("hide");
+      setTimeout(() => lockLayer.remove(), 260);
+      queryInput.focus();
+      if (rememberSessions.checked) localStorage.setItem(KEY_UNLOCKED, "1");
+      setStatus("Unlocked. Ready to launch.", "success");
+    }
+
+    function applyLockout(durationMs) {
+      lockoutUntil = Date.now() + durationMs;
+      lockPass.disabled = true;
+      togglePass.disabled = true;
+      setLockStatus(`Locked for ${Math.round(durationMs / 1000)} seconds.`, "error");
+      const interval = setInterval(() => {
+        const remaining = lockoutUntil - Date.now();
+        if (remaining <= 0) {
+          clearInterval(interval);
+          lockPass.disabled = false;
+          togglePass.disabled = false;
+          setLockStatus("Try again.", "");
+          lockPass.focus();
+        } else {
+          setLockStatus(`Locked for ${Math.ceil(remaining / 1000)} seconds...`, "error");
+        }
+      }, 500);
+    }
+
+    document.getElementById("lock-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (Date.now() < lockoutUntil) return;
+      const val = lockPass.value.trim();
+      if (val === PASSWORD) {
+        setLockStatus("Unlocked.", "success");
+        unlock();
+      } else {
+        attempts += 1;
+        const left = Math.max(0, 5 - attempts);
+        setLockStatus(left ? `Wrong password. ${left} tries left.` : "Too many attempts.", "error");
+        lockPass.focus();
+        if (!left) {
+          applyLockout(30000);
+          attempts = 0;
+        }
+      }
+    });
+
+    tabs.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        tabs.forEach((b) => b.classList.remove("active"));
+        panels.forEach((p) => p.classList.remove("active"));
+        btn.classList.add("active");
+        document.getElementById(`tab-${btn.dataset.tab}`).classList.add("active");
+      });
+    });
+
+    function applyTheme(name) {
+      const theme = themes[name];
+      if (!theme) return;
+      Object.entries(theme.values).forEach(([key, value]) => {
+        document.documentElement.style.setProperty(key, value);
+      });
+      themeStatus.textContent = `${theme.label} applied.`;
+      if (rememberSessions.checked) localStorage.setItem(KEY_THEME, name);
+    }
+
+    Object.entries(themes).forEach(([key, value]) => {
+      const option = document.createElement("option");
+      option.value = key;
+      option.textContent = value.label;
+      themeSelect.appendChild(option);
+    });
+
+    themeSelect.addEventListener("change", (e) => applyTheme(e.target.value));
+
+    reducedMotion.addEventListener("change", () => {
+      document.documentElement.style.setProperty("scroll-behavior", reducedMotion.checked ? "auto" : "smooth");
+      document.body.style.transition = reducedMotion.checked ? "none" : "";
+    });
+
+    rememberSessions.addEventListener("change", () => {
+      if (!rememberSessions.checked) {
+        localStorage.removeItem(KEY_THEME);
+        localStorage.removeItem(KEY_UNLOCKED);
+        localStorage.removeItem(KEY_RECENT);
+        localStorage.removeItem("marshall-last");
+      } else {
+        if (localStorage.getItem(KEY_THEME)) applyTheme(localStorage.getItem(KEY_THEME));
+        if (localStorage.getItem(KEY_UNLOCKED) === "1") unlock();
+      }
+    });
+
+    adminUnlock.addEventListener("click", () => {
+      if (adminUnlocked) return;
+      if (adminPass.value.trim() === ADMIN_PASSWORD) {
+        adminUnlocked = true;
+        adminStatus.textContent = "Admin panel unlocked.";
+        adminStatus.className = "status success";
+        renderAdminContent();
+      } else {
+        adminStatus.textContent = "Invalid admin password.";
+        adminStatus.className = "status error";
+      }
+    });
+
+    function renderAdminContent() {
+      const wrap = document.createElement("div");
+      wrap.className = "settings-list";
+
+      const frameTools = document.createElement("div");
+      frameTools.className = "settings-item";
+      frameTools.innerHTML = "<strong>Frame tools</strong><p class=\"hint\">Force clear, reload, or swap to direct embed instantly.</p>";
+      const forceClear = document.createElement("button");
+      forceClear.className = "button-ghost";
+      forceClear.textContent = "Force clear frame";
+      forceClear.addEventListener("click", () => { frame.src = "about:blank"; setStatus("Viewer cleared by admin."); });
+      const forceDirect = document.createElement("button");
+      forceDirect.className = "button-ghost";
+      forceDirect.textContent = "Force direct reopen";
+      forceDirect.addEventListener("click", () => openDirect(currentUrl || "https://example.org"));
+      frameTools.append(forceClear, document.createElement("br"), forceDirect);
+
+      const recenter = document.createElement("div");
+      recenter.className = "settings-item";
+      recenter.innerHTML = "<strong>Recents</strong><p class=\"hint\">Clear or reuse your last few launches.</p>";
+      const clearHistory = document.createElement("button");
+      clearHistory.className = "button-ghost";
+      clearHistory.textContent = "Clear recent list";
+      clearHistory.addEventListener("click", () => {
+        recentItems = [];
+        renderRecent();
+        fallbackStatus.textContent = "";
+        localStorage.removeItem(KEY_RECENT);
+      });
+      const reopenLast = document.createElement("button");
+      reopenLast.className = "button-ghost";
+      reopenLast.textContent = "Reopen last stored";
+      reopenLast.addEventListener("click", () => {
+        const last = localStorage.getItem("marshall-last") || recentItems[0];
+        if (last) launch(last);
+      });
+      recenter.append(clearHistory, document.createElement("br"), reopenLast);
+
+      wrap.append(frameTools, recenter);
+      adminContent.innerHTML = "";
+      adminContent.appendChild(wrap);
+    }
+
+    const savedTheme = localStorage.getItem(KEY_THEME);
+    if (savedTheme && themes[savedTheme]) {
+      themeSelect.value = savedTheme;
+      applyTheme(savedTheme);
+    } else {
+      themeSelect.value = "origin";
+      applyTheme("origin");
+    }
+
+    if (localStorage.getItem(KEY_UNLOCKED) === "1") {
+      unlock();
+    } else {
+      lockPass.focus();
+    }
+
+    try {
+      const storedRecents = JSON.parse(localStorage.getItem(KEY_RECENT) || "[]");
+      if (Array.isArray(storedRecents)) {
+        recentItems = storedRecents;
+        renderRecent();
+      }
+    } catch (err) {
+      console.error("Failed to load recents", err);
+    }
+
+    const lastUrl = localStorage.getItem("marshall-last");
+    if (lastUrl) queryInput.value = lastUrl;
+  </script>
+</body>
+</html>
