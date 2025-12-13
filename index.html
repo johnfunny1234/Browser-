@@ -242,6 +242,17 @@
       opacity: 1;
     }
 
+    body.stealth {
+      background: #0d1117;
+      color: #d6deed;
+    }
+
+    body.stealth .shell { box-shadow: none; border-color: rgba(255, 255, 255, 0.04); }
+    body.stealth .brand { font-weight: 700; letter-spacing: 0.2px; }
+    body.stealth .badge { background: rgba(255, 255, 255, 0.06); color: #9fb1d3; border-color: rgba(255, 255, 255, 0.14); }
+    body.stealth button { box-shadow: none; }
+    body.stealth .toolbar .pill { background: rgba(255, 255, 255, 0.04); }
+
     .toolbar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
     .toolbar .grow { flex: 1; min-width: 220px; }
 
@@ -368,6 +379,7 @@
           <div class="grow stack">
             <button type="button" class="button-ghost" id="reload">Reload</button>
             <button type="button" class="button-ghost" id="open-direct">Open directly (embedded)</button>
+            <button type="button" class="button-ghost" id="cloak">Cloaked retry</button>
             <button type="button" class="button-ghost" id="fullscreen">Fullscreen</button>
             <button type="button" class="button-ghost" id="collapse">Collapse</button>
             <button type="button" class="button-ghost" id="clear">Clear frame</button>
@@ -378,6 +390,7 @@
         <div class="viewer" id="viewer">
           <iframe id="scramjet-frame" title="Scramjet" loading="lazy" sandbox="allow-scripts allow-forms allow-same-origin allow-popups allow-downloads" referrerpolicy="no-referrer"></iframe>
         </div>
+        <div class="status" id="block-hints"></div>
         <div class="recent" id="recent"></div>
       </section>
     </section>
@@ -416,6 +429,14 @@
           <div class="settings-item">
             <label><input type="checkbox" id="auto-resume" /> Auto-resume last launch on unlock</label>
             <p class="hint">Automatically reloads the most recent link into Scramjet when you unlock.</p>
+          </div>
+          <div class="settings-item">
+            <label><input type="checkbox" id="stealth-mode" /> Stealth cloak</label>
+            <p class="hint">Tone the UI down and rename the tab if Chrome is watching.</p>
+          </div>
+          <div class="settings-item">
+            <label><input type="checkbox" id="block-guard" checked /> Anti-block assist</label>
+            <p class="hint">Auto-retries with a cloaked embed when the frame is blocked.</p>
           </div>
           <div class="settings-item">
             <label for="endpoint">Scramjet endpoint</label>
@@ -494,6 +515,8 @@
     const KEY_CUSTOM = "marshall-custom";
     const KEY_ENDPOINT = "marshall-endpoint";
     const KEY_AUTORESTORE = "marshall-auto-resume";
+    const KEY_STEALTH = "marshall-stealth";
+    const KEY_BLOCKGUARD = "marshall-block-guard";
     const SCRAMJET_ENDPOINTS = [
       { label: "Mercury GitHub (default)", url: "https://mercuryworkshop.github.io/scramjet/" },
       { label: "Scramjet Worker", url: "https://scramjet.workers.dev/" },
@@ -517,12 +540,14 @@
     const recentEl = document.getElementById("recent");
     const reloadBtn = document.getElementById("reload");
     const openDirectBtn = document.getElementById("open-direct");
+    const cloakBtn = document.getElementById("cloak");
     const fullscreenBtn = document.getElementById("fullscreen");
     const collapseBtn = document.getElementById("collapse");
     const clearBtn = document.getElementById("clear");
     const randomBtn = document.getElementById("random-launch");
     const progress = document.getElementById("load-progress");
     const progressBar = document.getElementById("progress-bar");
+    const blockHints = document.getElementById("block-hints");
     const tabs = document.querySelectorAll(".tab-btn");
     const panels = document.querySelectorAll(".tab-panel");
     const themeSelect = document.getElementById("theme");
@@ -530,6 +555,8 @@
     const reducedMotion = document.getElementById("reduced-motion");
     const rememberSessions = document.getElementById("remember-sessions");
     const autoResume = document.getElementById("auto-resume");
+    const stealthMode = document.getElementById("stealth-mode");
+    const blockGuard = document.getElementById("block-guard");
     const endpointSelect = document.getElementById("endpoint");
     const endpointStatus = document.getElementById("endpoint-status");
     const testEndpoint = document.getElementById("test-endpoint");
@@ -546,6 +573,7 @@
     const customStatus = document.getElementById("custom-status");
     const customLinks = document.getElementById("custom-links");
     let loadTimer;
+    let blockTimer;
     let currentUrl = "";
     let recentItems = [];
     let attempts = 0;
@@ -698,13 +726,21 @@
         progressBar.style.width = `${Math.min(100, Math.max(0, value))}%`;
       }
 
-      function setEndpoint(url) {
-        activeEndpoint = url;
-        endpointPill.textContent = new URL(url).hostname;
-        endpointPill.title = url;
-        endpointStatus.textContent = `Using ${url}`;
-        if (rememberSessions.checked) localStorage.setItem(KEY_ENDPOINT, url);
+    function setEndpoint(url) {
+      activeEndpoint = url;
+      endpointPill.textContent = new URL(url).hostname;
+      endpointPill.title = url;
+      endpointStatus.textContent = `Using ${url}`;
+      if (rememberSessions.checked) localStorage.setItem(KEY_ENDPOINT, url);
+    }
+
+    function applyStealth(enabled) {
+      document.body.classList.toggle("stealth", enabled);
+      document.title = enabled ? "Docs viewer" : "MARSHALL06178 | Scramjet Portal";
+      if (rememberSessions.checked) {
+        localStorage.setItem(KEY_STEALTH, enabled ? "1" : "0");
       }
+    }
 
     function setLockStatus(msg, type = "") {
       lockStatus.textContent = msg;
@@ -850,6 +886,10 @@
       if (loadTimer) {
         clearTimeout(loadTimer);
       }
+      if (blockTimer) {
+        clearTimeout(blockTimer);
+      }
+      blockHints.textContent = "";
 
         const scramjetUrl = buildScramjetUrl(url);
         currentUrl = url;
@@ -857,6 +897,7 @@
         viewer.classList.remove("collapsed");
         setStatus("Loading with Scramjet...", "");
         setProgress(12, true);
+        blockTimer = setTimeout(() => handleBlocked(scramjetUrl, url), 6500);
         frame.src = scramjetUrl;
         fallbackStatus.textContent = "";
         loadTimer = setTimeout(() => {
@@ -866,10 +907,16 @@
 
         frame.onload = () => {
           clearTimeout(loadTimer);
+          clearTimeout(blockTimer);
+          blockHints.textContent = "";
           setStatus("Running inside Scramjet (stays on this page).", "success");
           setProgress(100);
           setTimeout(() => setProgress(0, false), 600);
           pushRecent(url);
+        };
+
+        frame.onerror = () => {
+          handleBlocked(scramjetUrl, url);
         };
 
         const interval = setInterval(() => {
@@ -902,6 +949,23 @@
 
       wrap.append(scramjetBtn, directBtn);
       fallbackStatus.appendChild(wrap);
+    }
+
+    function handleBlocked(scramjetUrl, directUrl) {
+      clearTimeout(loadTimer);
+      blockHints.textContent = "Chrome blocked the embed. Try another endpoint, open directly, or cloak the load.";
+      setStatus("Embed blocked or refused by Chrome.", "error");
+      addFallbackActions(scramjetUrl, directUrl);
+      if (blockGuard.checked) {
+        cloakLoad(scramjetUrl);
+      }
+    }
+
+    function cloakLoad(scramjetUrl) {
+      const html = `<meta http-equiv="refresh" content="0;url=${scramjetUrl.replace(/&/g, "&amp;")}"><style>body{margin:0;font-family:Inter,sans-serif;background:#040915;color:#9fb1d3;display:grid;place-items:center;height:100vh;}p{max-width:420px;text-align:center;line-height:1.5;}</style><p>Retrying inside a cloaked embed…</p>`;
+      frame.src = `data:text/html;charset=utf-8,${encodeURIComponent(html)}`;
+      setStatus("Cloaked retry sent — if it still fails, switch endpoints.", "warn");
+      setProgress(40, true);
     }
 
     function openDirect(url) {
@@ -970,6 +1034,15 @@
     });
 
     openDirectBtn.addEventListener("click", () => openDirect(currentUrl));
+
+    cloakBtn.addEventListener("click", () => {
+      if (!currentUrl) {
+        setStatus("Nothing to cloak yet.", "error");
+        return;
+      }
+      const scramjetUrl = buildScramjetUrl(currentUrl);
+      cloakLoad(scramjetUrl);
+    });
 
     fullscreenBtn.addEventListener("click", () => {
       viewer.classList.toggle("fullscreen");
@@ -1117,6 +1190,8 @@
         localStorage.removeItem(KEY_CUSTOM);
         localStorage.removeItem(KEY_ENDPOINT);
         localStorage.removeItem(KEY_AUTORESTORE);
+        localStorage.removeItem(KEY_STEALTH);
+        localStorage.removeItem(KEY_BLOCKGUARD);
       } else {
         if (localStorage.getItem(KEY_THEME)) applyTheme(localStorage.getItem(KEY_THEME));
         if (localStorage.getItem(KEY_UNLOCKED) === "1") unlock();
@@ -1126,6 +1201,16 @@
     autoResume.addEventListener("change", () => {
       if (rememberSessions.checked) {
         localStorage.setItem(KEY_AUTORESTORE, autoResume.checked ? "1" : "0");
+      }
+    });
+
+    stealthMode.addEventListener("change", () => {
+      applyStealth(stealthMode.checked);
+    });
+
+    blockGuard.addEventListener("change", () => {
+      if (rememberSessions.checked) {
+        localStorage.setItem(KEY_BLOCKGUARD, blockGuard.checked ? "1" : "0");
       }
     });
 
@@ -1230,6 +1315,13 @@
 
     const savedAuto = localStorage.getItem(KEY_AUTORESTORE);
     autoResume.checked = savedAuto === "1";
+
+    const savedStealth = localStorage.getItem(KEY_STEALTH) === "1";
+    stealthMode.checked = savedStealth;
+    applyStealth(savedStealth);
+
+    const savedGuard = localStorage.getItem(KEY_BLOCKGUARD);
+    if (savedGuard !== null) blockGuard.checked = savedGuard === "1";
 
     try {
       const storedCustom = JSON.parse(localStorage.getItem(KEY_CUSTOM) || "[]");
