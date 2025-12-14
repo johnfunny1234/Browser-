@@ -5,18 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>MARSHALL06178</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
     :root {
-      --bg: radial-gradient(circle at 15% 20%, rgba(141, 212, 255, 0.12), transparent 34%),
-        radial-gradient(circle at 80% 10%, rgba(126, 165, 255, 0.14), transparent 38%),
-        radial-gradient(circle at 40% 75%, rgba(120, 244, 201, 0.16), transparent 52%),
-        #060912;
+      --bg: radial-gradient(circle at 20% 12%, rgba(124, 224, 196, 0.16), transparent 34%),
+        radial-gradient(circle at 80% 14%, rgba(123, 166, 255, 0.18), transparent 32%),
+        radial-gradient(circle at 44% 80%, rgba(255, 216, 130, 0.1), transparent 38%),
+        #05080f;
       --panel: rgba(255, 255, 255, 0.04);
       --panel-strong: rgba(255, 255, 255, 0.08);
-      --border: rgba(255, 255, 255, 0.09);
-      --text: #f3f7ff;
-      --muted: #9baac6;
+      --border: rgba(255, 255, 255, 0.1);
+      --text: #f6f8ff;
+      --muted: #a4b2cb;
       --accent: #7ce0c4;
       --accent-2: #7ba6ff;
       --danger: #ff9b9b;
@@ -28,34 +28,33 @@
     body {
       margin: 0;
       min-height: 100vh;
+      background: var(--bg);
+      font-family: 'Space Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
+      color: var(--text);
+      padding: 32px 16px 46px;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: var(--bg);
-      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
-      color: var(--text);
-      padding: 28px 12px 40px;
-      letter-spacing: 0.1px;
     }
 
     .shell {
-      width: min(1200px, 100%);
-      background: linear-gradient(140deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.03));
+      width: min(1280px, 100%);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.03));
       border: 1px solid var(--border);
-      border-radius: 26px;
+      border-radius: 28px;
       padding: 24px;
-      box-shadow: 0 18px 60px rgba(0, 0, 0, 0.45);
+      box-shadow: 0 18px 64px rgba(0, 0, 0, 0.5);
       backdrop-filter: blur(12px);
-      animation: rise 620ms cubic-bezier(0.16, 1, 0.3, 1);
+      animation: rise 640ms cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     header {
       display: flex;
-      justify-content: space-between;
-      gap: 12px;
       align-items: center;
+      gap: 12px;
+      justify-content: space-between;
       flex-wrap: wrap;
-      margin-bottom: 14px;
+      margin-bottom: 16px;
     }
 
     .brand {
@@ -64,13 +63,19 @@
       gap: 10px;
       font-size: 30px;
       font-weight: 800;
+      letter-spacing: 0.3px;
     }
 
     .badge { padding: 7px 11px; border-radius: 999px; background: rgba(124, 224, 196, 0.16); color: var(--accent); border: 1px solid rgba(124, 224, 196, 0.34); box-shadow: 0 12px 30px rgba(124, 224, 196, 0.18); font-size: 12px; }
     .muted { color: var(--muted); }
 
-    .grid { display: grid; grid-template-columns: 1.35fr 1fr; gap: 14px; }
-    @media (max-width: 980px) { .grid { grid-template-columns: 1fr; } }
+    .layout {
+      display: grid;
+      grid-template-columns: 1.25fr 1.1fr;
+      gap: 14px;
+    }
+
+    @media (max-width: 1040px) { .layout { grid-template-columns: 1fr; } }
 
     .card {
       background: var(--panel);
@@ -78,29 +83,40 @@
       border-radius: var(--radius);
       padding: 16px;
       box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
-      animation: fadeUp 600ms ease both;
+      animation: fadeUp 620ms ease both;
     }
 
-    .card h2 { margin: 0 0 8px; letter-spacing: 0.15px; }
+    .card h2 { margin: 0 0 6px; letter-spacing: 0.2px; }
     .card p { margin: 0 0 12px; color: var(--muted); }
 
-    .search-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; }
-    input[type="text"], input[type="password"], select {
+    .tab-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+    .tab { padding: 11px 14px; border-radius: 14px; border: 1px solid rgba(255, 255, 255, 0.14); background: rgba(255, 255, 255, 0.05); cursor: pointer; font-weight: 600; transition: transform 150ms ease, border-color 170ms ease, background 170ms ease; }
+    .tab.active { border-color: rgba(124, 224, 196, 0.65); background: rgba(124, 224, 196, 0.12); color: var(--accent); box-shadow: 0 14px 30px rgba(124, 224, 196, 0.18); }
+    .tab:hover { transform: translateY(-1px); }
+
+    .pane { display: none; }
+    .pane.active { display: block; }
+
+    .stack { display: flex; flex-direction: column; gap: 12px; }
+    .row { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; }
+
+    input[type="text"], input[type="password"], select, textarea {
       width: 100%;
       padding: 14px 15px;
       border-radius: 14px;
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.14);
       background: rgba(255, 255, 255, 0.05);
       color: var(--text);
       font-size: 15px;
       outline: none;
       transition: border-color 160ms ease, transform 180ms ease, box-shadow 190ms ease, background 170ms ease;
+      resize: vertical;
     }
 
-    input:focus, select:focus { border-color: var(--accent); transform: translateY(-1px); box-shadow: 0 12px 26px rgba(124, 231, 200, 0.18); background: rgba(255, 255, 255, 0.08); }
+    input:focus, select:focus, textarea:focus { border-color: var(--accent); transform: translateY(-1px); box-shadow: 0 12px 26px rgba(124, 231, 200, 0.18); background: rgba(255, 255, 255, 0.08); }
 
     button {
-      padding: 13px 16px;
+      padding: 13px 15px;
       border-radius: 14px;
       border: none;
       cursor: pointer;
@@ -117,49 +133,54 @@
 
     .button-ghost { background: rgba(255, 255, 255, 0.05); color: var(--text); box-shadow: none; border: 1px solid rgba(255, 255, 255, 0.12); }
     .button-danger { background: var(--danger); color: #1f0b0b; box-shadow: none; }
+    .button-inline { padding: 10px 11px; font-size: 13px; }
 
-    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
     .chip { padding: 9px 12px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(255, 255, 255, 0.05); color: var(--text); font-size: 13px; cursor: pointer; transition: transform 160ms ease, border-color 170ms ease, background 170ms ease; }
     .chip:hover { transform: translateY(-1px); border-color: rgba(124, 224, 196, 0.6); background: rgba(124, 224, 196, 0.1); }
 
-    .links { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-top: 8px; }
+    .links { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px; }
     .link-tile { padding: 12px 13px; border-radius: 14px; border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(255, 255, 255, 0.05); color: var(--text); text-decoration: none; transition: transform 150ms ease, border-color 170ms ease, background 170ms ease; display: block; }
     .link-tile:hover { transform: translateY(-1px); border-color: rgba(124, 224, 196, 0.5); background: rgba(124, 224, 196, 0.08); }
 
     .toolbar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
     .toolbar button { padding: 11px 12px; font-size: 13px; }
 
-    .viewer-wrap { position: relative; border-radius: 18px; overflow: hidden; border: 1px solid var(--border); background: var(--panel-strong); min-height: 360px; }
+    .viewer-card h2 { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .viewer-wrap { position: relative; border-radius: 20px; overflow: hidden; border: 1px solid var(--border); background: var(--panel-strong); min-height: 520px; }
     iframe { width: 100%; height: 100%; border: none; background: #0b101c; }
 
     .status { margin-top: 6px; font-size: 13px; color: var(--muted); min-height: 18px; }
     .pill { display: inline-flex; align-items: center; gap: 6px; padding: 8px 11px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(255, 255, 255, 0.06); margin-right: 6px; font-size: 13px; }
     .pill.danger { border-color: rgba(255, 155, 155, 0.35); color: var(--danger); background: rgba(255, 155, 155, 0.1); }
 
+    .meta { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
+    .small { font-size: 13px; color: var(--muted); }
+
     .lock-screen {
       position: fixed;
       inset: 0;
-      background: rgba(4, 6, 13, 0.78);
+      background: rgba(5, 8, 15, 0.82);
       backdrop-filter: blur(10px);
       display: flex;
       align-items: center;
       justify-content: center;
       z-index: 99;
       opacity: 1;
-      transition: opacity 220ms ease;
+      transition: opacity 240ms ease;
     }
 
     .lock-screen.hidden { opacity: 0; pointer-events: none; }
 
     .lock-card {
-      width: min(420px, 90%);
+      width: min(440px, 92%);
       background: linear-gradient(150deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04));
       border: 1px solid var(--border);
-      border-radius: 22px;
+      border-radius: 24px;
       padding: 22px 20px;
       box-shadow: 0 18px 60px rgba(0, 0, 0, 0.5);
       text-align: center;
-      animation: rise 620ms ease;
+      animation: rise 640ms ease;
     }
 
     .lock-card h2 { margin: 0 0 6px; }
@@ -169,6 +190,10 @@
     .toggle { display: flex; align-items: center; gap: 8px; margin-top: 8px; font-size: 13px; color: var(--muted); justify-content: center; }
     .toggle input { width: 16px; height: 16px; }
 
+    .list { display: flex; flex-direction: column; gap: 6px; }
+    .item { padding: 10px 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.06); background: rgba(255,255,255,0.03); display: flex; justify-content: space-between; align-items: center; }
+    .item strong { letter-spacing: 0.2px; }
+
     @keyframes rise { from { transform: translateY(12px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
     @keyframes fadeUp { from { transform: translateY(8px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
   </style>
@@ -177,43 +202,103 @@
   <div class="shell" aria-live="polite">
     <header>
       <div class="brand">MARSHALL06178 <span class="badge">Scramjet</span></div>
-      <div class="muted">Stay on-page, bypass blocks, launch faster.</div>
+      <div class="muted">Full-screen viewer, bypass controls, and faster on-page launches.</div>
     </header>
 
-    <div class="grid">
-      <div>
-        <div class="card">
-          <h2>Launch</h2>
-          <p class="muted">Type a link or search and send it through the Scramjet relay. The viewer stays here.</p>
-          <div class="search-row">
-            <input type="text" id="input" placeholder="Enter URL or search" autocomplete="off" />
-            <button id="launch">Open</button>
-          </div>
-          <div class="chips" id="chips"></div>
-          <div class="toolbar">
-            <select id="endpoint"></select>
-            <button class="button-ghost" id="retry">Retry</button>
-            <button class="button-ghost" id="clear">Clear</button>
-            <button class="button-ghost" id="fullscreen">Fullscreen</button>
-            <button class="button-ghost" id="bypass">Bypass popout</button>
-          </div>
-          <div class="status" id="status"></div>
+    <div class="layout">
+      <div class="card viewer-card">
+        <h2>Viewer <span class="small" id="endpointLabel"></span></h2>
+        <div class="viewer-wrap">
+          <iframe id="frame" title="Scramjet viewer" sandbox="allow-scripts allow-forms allow-same-origin allow-popups allow-modals allow-downloads"></iframe>
         </div>
-
-        <div class="card">
-          <h2>Shortcuts</h2>
-          <p class="muted">Quick jump into favorites through Scramjet.</p>
-          <div class="links" id="links"></div>
+        <div class="toolbar">
+          <button class="button-ghost button-inline" id="reload">Reload</button>
+          <button class="button-ghost button-inline" id="layered">Layered embed</button>
+          <button class="button-ghost button-inline" id="bypass">Popout bypass</button>
+          <button class="button-ghost button-inline" id="fullscreen">Fullscreen</button>
+          <button class="button-ghost button-inline" id="bridge">Bridge load</button>
+          <span class="small" id="frameStatus"></span>
         </div>
       </div>
 
-      <div>
-        <div class="card viewer-card">
-          <h2>Viewer</h2>
-          <div class="viewer-wrap">
-            <iframe id="frame" title="Scramjet viewer" sandbox="allow-scripts allow-forms allow-same-origin allow-popups allow-modals allow-downloads"></iframe>
+      <div class="card">
+        <div class="tab-bar">
+          <div class="tab active" data-tab="launch">Launch</div>
+          <div class="tab" data-tab="shortcuts">Shortcuts</div>
+          <div class="tab" data-tab="settings">Settings</div>
+          <div class="tab" data-tab="admin">Admin</div>
+        </div>
+
+        <div class="pane active" id="pane-launch">
+          <div class="stack">
+            <div class="row">
+              <input type="text" id="input" placeholder="Enter URL or search" autocomplete="off" />
+              <button id="launch">Open</button>
+            </div>
+            <div class="toolbar">
+              <select id="endpoint"></select>
+              <button class="button-ghost button-inline" id="retry">Retry</button>
+              <button class="button-ghost button-inline" id="clear">Clear</button>
+              <button class="button-ghost button-inline" id="copy">Copy link</button>
+              <button class="button-ghost button-inline" id="random">Random preset</button>
+            </div>
+            <div class="chips" id="chips"></div>
+            <div class="status" id="status"></div>
           </div>
-          <div class="status" id="frameStatus"></div>
+        </div>
+
+        <div class="pane" id="pane-shortcuts">
+          <p class="muted">Jump straight into game and study decks through Scramjet.</p>
+          <div class="links" id="links"></div>
+        </div>
+
+        <div class="pane" id="pane-settings">
+          <div class="stack">
+            <div class="item">
+              <div>
+                <strong>Remember device</strong>
+                <div class="small">Keep MARSHALL06178 unlocked between visits.</div>
+              </div>
+              <input type="checkbox" id="remember" />
+            </div>
+            <div class="item">
+              <div>
+                <strong>Custom endpoint</strong>
+                <div class="small">Paste a mirror link if the defaults are blocked.</div>
+              </div>
+              <input type="text" id="customEndpoint" placeholder="https://example.workers.dev/?url=" />
+            </div>
+            <div class="item">
+              <div>
+                <strong>Theme depth</strong>
+                <div class="small">Toggle softer background.</div>
+              </div>
+              <button class="button-ghost" id="themeToggle">Lighten</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="pane" id="pane-admin">
+          <div class="stack">
+            <div class="item">
+              <div>
+                <strong>Admin lock</strong>
+                <div class="small">Enter FWKZT.MARSHALL to reveal tools.</div>
+              </div>
+              <input type="password" id="adminInput" placeholder="Admin key" />
+            </div>
+            <div class="item">
+              <div>
+                <strong>Tools</strong>
+                <div class="small" id="adminHint">Locked</div>
+              </div>
+              <div class="toolbar">
+                <button class="button-ghost button-inline" id="testEndpoint" disabled>Ping endpoint</button>
+                <button class="button-ghost button-inline" id="clearSaved" disabled>Clear saved</button>
+                <button class="button-ghost button-inline" id="reopen" disabled>Reopen last</button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -224,8 +309,8 @@
       <h2>Access Check</h2>
       <p>Enter the MARSHALL06178 key to continue.</p>
       <input type="password" id="lockInput" placeholder="Password" autocomplete="current-password" />
-      <div class="toggle"><input type="checkbox" id="remember" /> <label for="remember">Stay unlocked on this device</label></div>
-      <div class="hint" id="lockHint">Hint: Key changes often. Current key ends with 42.</div>
+      <div class="toggle"><input type="checkbox" id="rememberLock" /> <label for="rememberLock">Stay unlocked on this device</label></div>
+      <div class="hint" id="lockHint">Hint: Key ends with 42.</div>
       <button id="unlock">Unlock</button>
       <button class="button-ghost" id="resetPass">Reset saved key</button>
       <div class="status" id="lockStatus"></div>
@@ -234,7 +319,11 @@
 
   <script>
     const STORAGE_KEY = 'marshall-unlock';
+    const LAST_TARGET = 'marshall-last-target';
+    const CUSTOM_ENDPOINT = 'marshall-endpoint';
     const PASSWORD = 'Diddy_42';
+    const ADMIN_KEY = 'FWKZT.MARSHALL';
+
     const input = document.getElementById('input');
     const launchBtn = document.getElementById('launch');
     const chips = document.getElementById('chips');
@@ -247,26 +336,41 @@
     const clearBtn = document.getElementById('clear');
     const fullscreenBtn = document.getElementById('fullscreen');
     const bypassBtn = document.getElementById('bypass');
+    const reloadBtn = document.getElementById('reload');
+    const layeredBtn = document.getElementById('layered');
+    const bridgeBtn = document.getElementById('bridge');
+    const copyBtn = document.getElementById('copy');
+    const randomBtn = document.getElementById('random');
+    const endpointLabel = document.getElementById('endpointLabel');
+    const rememberToggle = document.getElementById('remember');
+    const customEndpoint = document.getElementById('customEndpoint');
+    const themeToggle = document.getElementById('themeToggle');
     const lock = document.getElementById('lock');
     const lockInput = document.getElementById('lockInput');
     const lockStatus = document.getElementById('lockStatus');
     const unlockBtn = document.getElementById('unlock');
-    const remember = document.getElementById('remember');
+    const rememberLock = document.getElementById('rememberLock');
     const resetPass = document.getElementById('resetPass');
+    const adminInput = document.getElementById('adminInput');
+    const adminHint = document.getElementById('adminHint');
+    const testEndpoint = document.getElementById('testEndpoint');
+    const clearSaved = document.getElementById('clearSaved');
+    const reopenBtn = document.getElementById('reopen');
 
     const endpoints = [
       { label: 'Worker mirror (default)', url: 'https://scramjet.workers.dev/?url=' },
-      { label: 'Scramjet main', url: 'https://scramjet.tech/?url=' },
       { label: 'Proxy mirror', url: 'https://scramjet-proxy.pages.dev/?url=' },
+      { label: 'Scramjet main', url: 'https://scramjet.tech/?url=' },
+      { label: 'Stealth data bridge', url: 'data:text/html;base64,' },
     ];
 
     const presets = ['https://coolmathgames.com', 'https://poki.com', 'https://google.com', 'https://youtube.com', 'https://classroom.google.com', 'https://tetris.com/play-tetris']
       .map(url => ({ label: new URL(url).hostname.replace('www.', ''), url }));
 
     const shortcutGroups = [
-      { label: 'Games', urls: ['https://poki.com', 'https://www.coolmathgames.com', 'https://krunker.io', 'https://retrobowl.me'] },
-      { label: 'Study', urls: ['https://google.com', 'https://wikipedia.org', 'https://quizlet.com', 'https://notion.so'] },
-      { label: 'Tools', urls: ['https://replit.com', 'https://github.com', 'https://drive.google.com', 'https://classroom.google.com'] },
+      { label: 'Games', urls: ['https://poki.com', 'https://www.coolmathgames.com', 'https://krunker.io', 'https://retrobowl.me', 'https://shellshock.io'] },
+      { label: 'Study', urls: ['https://google.com', 'https://wikipedia.org', 'https://quizlet.com', 'https://notion.so', 'https://desmos.com'] },
+      { label: 'Tools', urls: ['https://replit.com', 'https://github.com', 'https://drive.google.com', 'https://classroom.google.com', 'https://duckduckgo.com'] },
     ];
 
     function normalize(text) {
@@ -285,15 +389,51 @@
       frameStatus.innerHTML = message ? `<span class="pill ${danger ? 'danger' : ''}">${message}</span>` : '';
     }
 
+    function buildBridgeMarkup(scramUrl) {
+      const html = `<!doctype html><html><head><meta charset="utf-8"><style>html,body{margin:0;height:100%;background:#05080f;}iframe{border:0;width:100%;height:100%;}</style></head><body><iframe src="${scramUrl}" allow="clipboard-read; clipboard-write; fullscreen; geolocation" allowfullscreen></iframe></body></html>`;
+      return 'data:text/html;base64,' + btoa(html);
+    }
+
+    function resolveEndpoint() {
+      const custom = localStorage.getItem(CUSTOM_ENDPOINT);
+      if (custom) return { label: 'Custom', url: custom };
+      const opt = endpointSelect.options[endpointSelect.selectedIndex];
+      const url = opt ? opt.value : endpoints[0].url;
+      const label = opt ? opt.textContent : endpoints[0].label;
+      return { label, url };
+    }
+
+    function updateEndpointLabel() {
+      const { label } = resolveEndpoint();
+      endpointLabel.textContent = label ? `via ${label}` : '';
+    }
+
     function load(url) {
-      const endpoint = endpoints[endpointSelect.selectedIndex]?.url || endpoints[0].url;
       const target = normalize(url || input.value);
       if (!target) return;
-      const scramUrl = `${endpoint}${encodeURIComponent(target)}`;
-      frame.src = scramUrl;
-      setStatus(`Loading via ${endpointSelect.options[endpointSelect.selectedIndex].textContent}`);
-      setFrameStatus('Loading...');
+      const { url: endpoint } = resolveEndpoint();
+      const baseUrl = `${endpoint}${endpoint.endsWith('?url=') ? '' : ''}`;
+      const scramUrl = endpoint.startsWith('data:')
+        ? `${endpoints[0].url}${encodeURIComponent(target)}`
+        : `${baseUrl}${encodeURIComponent(target)}`;
+      const finalSrc = endpoint.startsWith('data:') ? buildBridgeMarkup(scramUrl) : scramUrl;
       frame.dataset.target = target;
+      localStorage.setItem(LAST_TARGET, target);
+      setStatus(`Loading ${target}`);
+      setFrameStatus('Loading...');
+      frame.src = finalSrc;
+      updateEndpointLabel();
+      blockGuard(target, finalSrc);
+    }
+
+    let guardTimer;
+    function blockGuard(target, scramUrl) {
+      clearTimeout(guardTimer);
+      guardTimer = setTimeout(() => {
+        if (scramUrl.startsWith('data:')) return;
+        setFrameStatus('Chrome blocked embed — trying bridge...', true);
+        frame.src = buildBridgeMarkup(scramUrl);
+      }, 4500);
     }
 
     function retryLoad() {
@@ -312,25 +452,31 @@
     }
 
     function fullscreen() {
-      if (frame.requestFullscreen) {
-        frame.requestFullscreen();
-      }
+      if (frame.requestFullscreen) frame.requestFullscreen();
     }
 
     function bypassPopout() {
       const target = frame.dataset.target || normalize(input.value);
       if (!target) return setStatus('Nothing to launch', true);
-      const endpoint = endpoints[endpointSelect.selectedIndex]?.url || endpoints[0].url;
-      const scramUrl = `${endpoint}${encodeURIComponent(target)}`;
+      const { url: endpoint } = resolveEndpoint();
+      const scramUrl = endpoint.startsWith('data:')
+        ? buildBridgeMarkup(`${endpoints[0].url}${encodeURIComponent(target)}`)
+        : `${endpoint}${encodeURIComponent(target)}`;
       const win = window.open('about:blank', '_blank');
-      if (!win) {
-        setStatus('Popup blocked — allow popups to bypass.', true);
-        return;
-      }
+      if (!win) return setStatus('Popup blocked — allow popups to bypass.', true);
       const doc = win.document;
       doc.write(`<!doctype html><title>Loading...</title><style>html,body{margin:0;height:100%;background:#050910;}iframe{border:0;width:100%;height:100%;}</style><iframe src="${scramUrl}" allowfullscreen allow="clipboard-read; clipboard-write; fullscreen"></iframe>`);
       doc.close();
       setStatus('Bypass popout opened');
+    }
+
+    function bridgeLoad() {
+      const target = frame.dataset.target || normalize(input.value);
+      if (!target) return setStatus('Nothing to bridge', true);
+      const scramUrl = `${endpoints[0].url}${encodeURIComponent(target)}`;
+      frame.src = buildBridgeMarkup(scramUrl);
+      setFrameStatus('Bridge mode injected');
+      setStatus('Bridge path forced');
     }
 
     function buildChips() {
@@ -361,31 +507,63 @@
     }
 
     function buildEndpoints() {
+      endpointSelect.innerHTML = '';
       endpoints.forEach((e, i) => {
+        if (e.url.startsWith('data:')) return; // hide internal bridge entry
         const opt = document.createElement('option');
         opt.value = e.url; opt.textContent = e.label;
         endpointSelect.appendChild(opt);
         if (i === 0) endpointSelect.selectedIndex = 0;
       });
-      const saved = localStorage.getItem('marshall-endpoint');
-      if (saved) {
-        const idx = endpoints.findIndex(e => e.url === saved);
-        if (idx >= 0) endpointSelect.selectedIndex = idx;
-      }
+      const saved = localStorage.getItem(CUSTOM_ENDPOINT);
+      if (saved) customEndpoint.value = saved;
       endpointSelect.onchange = () => {
-        localStorage.setItem('marshall-endpoint', endpointSelect.value);
+        localStorage.removeItem(CUSTOM_ENDPOINT);
+        updateEndpointLabel();
         if (frame.dataset.target) retryLoad();
       };
+    }
+
+    function tabbing() {
+      const tabs = document.querySelectorAll('.tab');
+      tabs.forEach(tab => {
+        tab.onclick = () => {
+          tabs.forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          document.querySelectorAll('.pane').forEach(p => p.classList.remove('active'));
+          document.getElementById(`pane-${tab.dataset.tab}`).classList.add('active');
+        };
+      });
+    }
+
+    function copyLink() {
+      const value = frame.dataset.target || input.value;
+      if (!value) return setStatus('Nothing to copy', true);
+      navigator.clipboard.writeText(value).then(() => setStatus('Link copied'), () => setStatus('Copy failed', true));
+    }
+
+    function randomPreset() {
+      const pick = presets[Math.floor(Math.random() * presets.length)];
+      load(pick.url);
+    }
+
+    function syncRememberControls() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      const remembered = saved === PASSWORD;
+      rememberLock.checked = remembered;
+      rememberToggle.checked = remembered;
     }
 
     function handleLock() {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved === PASSWORD) {
         lock.classList.add('hidden');
+        syncRememberControls();
         return;
       }
       lock.classList.remove('hidden');
       lockInput.focus();
+      syncRememberControls();
     }
 
     function unlock() {
@@ -393,9 +571,11 @@
       if (!val) return;
       if (val === PASSWORD) {
         lockStatus.textContent = 'Unlocked';
-        if (remember.checked) localStorage.setItem(STORAGE_KEY, val);
+        lockStatus.style.color = 'var(--text)';
+        if (rememberLock.checked) localStorage.setItem(STORAGE_KEY, val);
         lock.classList.add('hidden');
-        setTimeout(() => lock.style.display = 'none', 240);
+        setTimeout(() => lock.style.display = 'none', 260);
+        syncRememberControls();
       } else {
         lockStatus.textContent = 'Incorrect password';
         lockStatus.style.color = 'var(--danger)';
@@ -410,14 +590,66 @@
       lock.style.display = 'flex';
       lockInput.value = '';
       lockInput.focus();
+      syncRememberControls();
+    }
+
+    function loadLast() {
+      const last = localStorage.getItem(LAST_TARGET);
+      if (last) load(last);
+    }
+
+    function handleAdmin() {
+      const key = adminInput.value.trim();
+      const unlocked = key === ADMIN_KEY;
+      adminHint.textContent = unlocked ? 'Unlocked' : 'Locked';
+      [testEndpoint, clearSaved, reopenBtn].forEach(btn => btn.disabled = !unlocked);
+    }
+
+    function testCurrentEndpoint() {
+      const { url } = resolveEndpoint();
+      setStatus('Testing endpoint...');
+      fetch(url, { method: 'HEAD', mode: 'no-cors' }).then(() => setStatus('Endpoint reachable')).catch(() => setStatus('Endpoint may be blocked', true));
+    }
+
+    function clearAllSaved() {
+      localStorage.clear();
+      setStatus('Local data cleared');
+      lock.classList.remove('hidden');
+      lock.style.display = 'flex';
+      handleLock();
+    }
+
+    function toggleTheme() {
+      const light = document.body.dataset.light === 'on';
+      document.body.dataset.light = light ? 'off' : 'on';
+      document.body.style.background = light ? 'var(--bg)' : '#0b111d';
+      themeToggle.textContent = light ? 'Lighten' : 'Darken';
+    }
+
+    function applyCustomEndpoint() {
+      const val = customEndpoint.value.trim();
+      if (!val) return;
+      localStorage.setItem(CUSTOM_ENDPOINT, val.endsWith('?url=') ? val : `${val}?url=`);
+      updateEndpointLabel();
+      if (frame.dataset.target) retryLoad();
+    }
+
+    function rememberToggleChange(checked) {
+      if (checked) {
+        localStorage.setItem(STORAGE_KEY, PASSWORD);
+      } else {
+        localStorage.removeItem(STORAGE_KEY);
+      }
+      syncRememberControls();
     }
 
     frame.addEventListener('load', () => {
+      clearTimeout(guardTimer);
       setFrameStatus('Loaded');
     });
 
     frame.addEventListener('error', () => {
-      setFrameStatus('Blocked or failed — try bypass popout or another endpoint', true);
+      setFrameStatus('Blocked or failed — try bridge or popout', true);
     });
 
     launchBtn.onclick = () => load();
@@ -425,15 +657,33 @@
     clearBtn.onclick = () => clearViewer();
     fullscreenBtn.onclick = () => fullscreen();
     bypassBtn.onclick = () => bypassPopout();
+    reloadBtn.onclick = () => retryLoad();
+    layeredBtn.onclick = () => bridgeLoad();
+    bridgeBtn.onclick = () => bridgeLoad();
+    copyBtn.onclick = () => copyLink();
+    randomBtn.onclick = () => randomPreset();
     unlockBtn.onclick = () => unlock();
     resetPass.onclick = () => resetSaved();
+    adminInput.oninput = () => handleAdmin();
+    testEndpoint.onclick = () => testCurrentEndpoint();
+    clearSaved.onclick = () => clearAllSaved();
+    reopenBtn.onclick = () => loadLast();
+    themeToggle.onclick = () => toggleTheme();
+    customEndpoint.onchange = () => applyCustomEndpoint();
+    rememberToggle.onchange = e => rememberToggleChange(e.target.checked);
+    rememberLock.onchange = e => rememberToggleChange(e.target.checked);
+
     lockInput.addEventListener('keyup', e => { if (e.key === 'Enter') unlock(); });
     input.addEventListener('keyup', e => { if (e.key === 'Enter') load(); });
+    input.addEventListener('keydown', e => { if (e.ctrlKey && e.key.toLowerCase() === 'l') { e.preventDefault(); input.focus(); input.select(); } });
 
     buildChips();
     buildLinks();
     buildEndpoints();
+    tabbing();
     handleLock();
+    updateEndpointLabel();
+    loadLast();
   </script>
 </body>
 </html>
