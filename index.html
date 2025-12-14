@@ -394,6 +394,7 @@
             <button type="button" class="button-ghost" id="reload">Reload</button>
             <button type="button" class="button-ghost" id="open-direct">Open directly (embedded)</button>
             <button type="button" class="button-ghost" id="cloak">Cloaked retry</button>
+            <button type="button" class="button-ghost" id="popout">Bypass popout</button>
             <button type="button" class="button-ghost" id="fullscreen">Fullscreen</button>
             <button type="button" class="button-ghost" id="collapse">Collapse</button>
             <button type="button" class="button-ghost" id="clear">Clear frame</button>
@@ -555,6 +556,7 @@
     const reloadBtn = document.getElementById("reload");
     const openDirectBtn = document.getElementById("open-direct");
     const cloakBtn = document.getElementById("cloak");
+    const popoutBtn = document.getElementById("popout");
     const fullscreenBtn = document.getElementById("fullscreen");
     const collapseBtn = document.getElementById("collapse");
     const clearBtn = document.getElementById("clear");
@@ -967,11 +969,12 @@
 
     function handleBlocked(scramjetUrl, directUrl) {
       clearTimeout(loadTimer);
-      blockHints.textContent = "Chrome blocked the embed. Try another endpoint, open directly, or cloak the load.";
+      blockHints.textContent = "Chrome blocked the embed. Try another endpoint, open directly, cloak, or use the popout bypass.";
       setStatus("Embed blocked or refused by Chrome.", "error");
       addFallbackActions(scramjetUrl, directUrl);
       if (blockGuard.checked) {
         cloakLoad(scramjetUrl);
+        openCloakedPop(scramjetUrl);
       }
     }
 
@@ -980,6 +983,26 @@
       frame.src = `data:text/html;charset=utf-8,${encodeURIComponent(html)}`;
       setStatus("Cloaked retry sent — if it still fails, switch endpoints.", "warn");
       setProgress(40, true);
+    }
+
+    function openCloakedPop(targetUrl) {
+      if (!targetUrl) {
+        setStatus("Nothing to open yet.", "error");
+        return;
+      }
+
+      const popup = window.open("", "marshall-notes", "noopener,noreferrer,width=1020,height=720,left=80,top=80");
+      if (!popup) {
+        setStatus("Popup blocked — allow popups for this page to use the bypass.", "error");
+        return;
+      }
+
+      const escapedUrl = targetUrl.replace(/"/g, "&quot;").replace(/</g, "&lt;");
+      const doc = `<!doctype html><html><head><title>Study Notes</title><meta name="referrer" content="no-referrer"><style>body{margin:0;font-family:Inter,system-ui;background:#0a0f1a;color:#c7d3f1;display:grid;place-items:center;height:100vh;}main{max-width:540px;padding:32px;border:1px solid rgba(255,255,255,0.12);border-radius:18px;background:rgba(255,255,255,0.04);box-shadow:0 22px 60px rgba(0,0,0,0.4);}p{line-height:1.6;text-align:center;}button{margin-top:12px;padding:12px 16px;border-radius:12px;border:1px solid rgba(255,255,255,0.18);background:linear-gradient(135deg,#7ee7c6,#7fb3ff);color:#031018;font-weight:800;cursor:pointer;}small{color:#8ba2c4;}</style></head><body><main><p>Opening a cloaked Scramjet session. If it stalls, tap the button below.</p><button onclick="location.href='${escapedUrl}'">Open now</button><p><small>If this popout is blocked by Chrome policies, switch endpoints back in MARSHALL.</small></p></main><script>setTimeout(()=>location.href='${escapedUrl}',400);</script></body></html>`;
+      popup.document.write(doc);
+      popup.document.close();
+      blockHints.textContent = "Opened a cloaked popout tab; check it if the embed stays blocked.";
+      setStatus("Launched bypass popout.", "warn");
     }
 
     function openDirect(url) {
@@ -1056,6 +1079,16 @@
       }
       const scramjetUrl = buildScramjetUrl(currentUrl);
       cloakLoad(scramjetUrl);
+    });
+
+    popoutBtn.addEventListener("click", () => {
+      const target = currentUrl || normalizeQuery(queryInput.value);
+      if (!target) {
+        setStatus("Enter a link before using the popout bypass.", "error");
+        queryInput.focus();
+        return;
+      }
+      openCloakedPop(buildScramjetUrl(target));
     });
 
     fullscreenBtn.addEventListener("click", () => {
