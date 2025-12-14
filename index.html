@@ -8,21 +8,21 @@
     @import url("https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700&display=swap");
 
     :root {
-      --bg: radial-gradient(circle at 14% 20%, rgba(130, 215, 255, 0.14), transparent 32%),
-        radial-gradient(circle at 82% 18%, rgba(131, 151, 255, 0.18), transparent 32%),
-        radial-gradient(circle at 46% 74%, rgba(126, 231, 198, 0.18), transparent 48%),
-        #05070f;
-      --panel: rgba(255, 255, 255, 0.04);
-      --panel-strong: rgba(255, 255, 255, 0.08);
+      --bg: radial-gradient(circle at 12% 18%, rgba(159, 216, 255, 0.16), transparent 32%),
+        radial-gradient(circle at 82% 10%, rgba(150, 168, 255, 0.16), transparent 36%),
+        radial-gradient(circle at 50% 78%, rgba(140, 244, 210, 0.18), transparent 48%),
+        #04060d;
+      --panel: rgba(255, 255, 255, 0.045);
+      --panel-strong: rgba(255, 255, 255, 0.09);
       --border: rgba(255, 255, 255, 0.08);
-      --text: #f8f9ff;
-      --muted: #a0aec6;
-      --accent: #8ce3c7;
-      --accent-2: #8fb3ff;
+      --text: #f7fbff;
+      --muted: #9fb2cc;
+      --accent: #7ce0c4;
+      --accent-2: #7fa7ff;
       --accent-3: #ffd48b;
-      --danger: #ff8b8b;
+      --danger: #ff9b9b;
       --radius: 18px;
-      --shadow: 0 18px 80px rgba(0, 0, 0, 0.52);
+      --shadow: 0 16px 70px rgba(0, 0, 0, 0.5);
     }
 
     * { box-sizing: border-box; }
@@ -425,6 +425,24 @@
 
     <section class="tab-panel" id="tab-settings">
       <section class="card">
+        <h2>Access & password</h2>
+        <p>Reworked lock with a personal pass option plus quick unlock controls.</p>
+        <div class="settings-list">
+          <div class="settings-item">
+            <label for="personal-pass">Set a personal password</label>
+            <input id="personal-pass" type="password" placeholder="New password (min 6 characters)" />
+            <button type="button" class="button-ghost" id="save-pass">Save personal password</button>
+            <div class="status" id="pass-status"></div>
+            <p class="hint">Defaults to the shared key until you save your own. Stored locally for this device only.</p>
+          </div>
+          <div class="settings-item">
+            <label><input type="checkbox" id="quick-unlock" checked /> Auto-unlock after correct pass</label>
+            <p class="hint">Keeps you signed in on this device until you clear it from the admin tab.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
         <h2>Appearance & behavior</h2>
         <p>Pick a theme and tune how the portal responds.</p>
         <div class="settings-list">
@@ -514,6 +532,7 @@
           <button type="button" class="button-ghost toggle-pass" id="toggle-pass">Show</button>
         </div>
         <div class="caps" id="lock-caps"></div>
+        <div class="hint" id="lock-hint"></div>
         <div style="height: 10px"></div>
         <button type="submit" style="width: 100%">Unlock</button>
       </form>
@@ -532,6 +551,8 @@
     const KEY_AUTORESTORE = "marshall-auto-resume";
     const KEY_STEALTH = "marshall-stealth";
     const KEY_BLOCKGUARD = "marshall-block-guard";
+    const KEY_PERSONAL = "marshall-personal-pass";
+    const KEY_QUICK = "marshall-quick-unlock";
     const SCRAMJET_ENDPOINTS = [
       { label: "Mercury GitHub (default)", url: "https://mercuryworkshop.github.io/scramjet/" },
       { label: "Scramjet Worker", url: "https://scramjet.workers.dev/" },
@@ -547,6 +568,7 @@
     const lockStatus = document.getElementById("lock-status");
     const lockPass = document.getElementById("lock-pass");
     const lockCaps = document.getElementById("lock-caps");
+    const lockHint = document.getElementById("lock-hint");
     const togglePass = document.getElementById("toggle-pass");
     const capsWarning = document.getElementById("caps-warning");
     const fallbackStatus = document.getElementById("fallback");
@@ -573,6 +595,10 @@
     const autoResume = document.getElementById("auto-resume");
     const stealthMode = document.getElementById("stealth-mode");
     const blockGuard = document.getElementById("block-guard");
+    const personalPassInput = document.getElementById("personal-pass");
+    const savePassBtn = document.getElementById("save-pass");
+    const passStatus = document.getElementById("pass-status");
+    const quickUnlock = document.getElementById("quick-unlock");
     const endpointSelect = document.getElementById("endpoint");
     const endpointStatus = document.getElementById("endpoint-status");
     const testEndpoint = document.getElementById("test-endpoint");
@@ -588,6 +614,7 @@
     const addCustom = document.getElementById("add-custom");
     const customStatus = document.getElementById("custom-status");
     const customLinks = document.getElementById("custom-links");
+    let personalPass = localStorage.getItem(KEY_PERSONAL) || "";
     let loadTimer;
     let blockTimer;
     let currentUrl = "";
@@ -763,6 +790,13 @@
       lockStatus.className = `status ${type}`;
     }
 
+    function refreshLockHint() {
+      if (!lockHint) return;
+      lockHint.textContent = personalPass
+        ? "Personal password is active for this device."
+        : "Using the shared access key: Diddy_42";
+    }
+
     function normalizeQuery(input) {
       const value = input.trim();
       if (!value) return "";
@@ -883,14 +917,29 @@
           customStatus.className = "status error";
           return;
         }
-        customItems = [{ label, url }, ...customItems.filter((c) => c.url !== url)].slice(0, 12);
-        customStatus.textContent = "Added shortcut.";
-        customStatus.className = "status success";
-        customLabel.value = "";
-        customUrl.value = "";
-        localStorage.setItem(KEY_CUSTOM, JSON.stringify(customItems));
-        renderCustomShortcuts();
+      customItems = [{ label, url }, ...customItems.filter((c) => c.url !== url)].slice(0, 12);
+      customStatus.textContent = "Added shortcut.";
+      customStatus.className = "status success";
+      customLabel.value = "";
+      customUrl.value = "";
+      localStorage.setItem(KEY_CUSTOM, JSON.stringify(customItems));
+      renderCustomShortcuts();
+    }
+
+    function savePersonalPassword() {
+      const value = personalPassInput.value.trim();
+      if (value.length < 6) {
+        passStatus.textContent = "Use at least 6 characters.";
+        passStatus.className = "status error";
+        return;
       }
+      personalPass = value;
+      localStorage.setItem(KEY_PERSONAL, value);
+      passStatus.textContent = "Personal password saved for this device.";
+      passStatus.className = "status success";
+      personalPassInput.value = "";
+      refreshLockHint();
+    }
 
     function launch(url) {
         if (!url) {
@@ -932,6 +981,8 @@
         };
 
         frame.onerror = () => {
+          setStatus("Frame reported an error. Trying safe viewer.", "error");
+          safeViewer(url);
           handleBlocked(scramjetUrl, url);
         };
 
@@ -969,16 +1020,23 @@
       directBtn.textContent = "Open directly in-frame";
       directBtn.addEventListener("click", () => openDirect(directUrl));
 
-      wrap.append(scramjetBtn, layeredBtn, directBtn);
+      const safeBtn = document.createElement("button");
+      safeBtn.type = "button";
+      safeBtn.className = "button-ghost";
+      safeBtn.textContent = "Safe viewer (no new tab)";
+      safeBtn.addEventListener("click", () => safeViewer(directUrl));
+
+      wrap.append(scramjetBtn, layeredBtn, directBtn, safeBtn);
       fallbackStatus.appendChild(wrap);
     }
 
     function handleBlocked(scramjetUrl, directUrl) {
       clearTimeout(loadTimer);
-      blockHints.textContent = "Chrome blocked the embed. Try another endpoint, use the layered embed, cloak, or popout bypass.";
+      blockHints.textContent = "Chrome blocked the embed or returned file-not-found. Switched to the safe viewer; try another endpoint, layered embed, cloak, or popout.";
       setStatus("Embed blocked or refused by Chrome.", "error");
       addFallbackActions(scramjetUrl, directUrl);
       layeredEmbed(scramjetUrl);
+      safeViewer(directUrl);
       if (blockGuard.checked) {
         cloakLoad(scramjetUrl);
         openCloakedPop(scramjetUrl);
@@ -1021,6 +1079,16 @@
       popup.document.close();
       blockHints.textContent = "Opened a cloaked popout tab; check it if the embed stays blocked.";
       setStatus("Launched bypass popout.", "warn");
+    }
+
+    function safeViewer(url) {
+      if (!url) return;
+      const escaped = url.replace(/"/g, "&quot;");
+      const doc = `<!doctype html><html><head><meta charset="utf-8"><title>Reader</title><meta name="referrer" content="no-referrer"><style>body{margin:0;font-family:Inter,system-ui;background:#050912;color:#cbd5ef;display:grid;place-items:center;height:100vh;}main{max-width:920px;width:94vw;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);border-radius:16px;box-shadow:0 16px 60px rgba(0,0,0,0.5);padding:18px;}header{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px;}iframe{width:100%;height:76vh;border:1px solid rgba(255,255,255,0.12);border-radius:12px;background:#02050d;}p{margin:0;color:#8da2c6;line-height:1.5;font-size:14px;}</style></head><body><main><header><strong>Safe viewer</strong><span style="font-size:12px;color:#95a6c6;">If it errors, use popout.</span></header><iframe src="${escaped}" allowfullscreen referrerpolicy="no-referrer" sandbox="allow-scripts allow-forms allow-same-origin allow-popups"></iframe><p>This keeps the tab on-page to avoid school blocking.</p></main></body></html>`;
+      frame.srcdoc = doc;
+      blockHints.textContent = "Safe viewer loaded. Try popout if the site blocks embeds.";
+      setStatus("Running inside safe viewer.", "warn");
+      setProgress(0, false);
     }
 
     function openDirect(url) {
@@ -1154,9 +1222,16 @@
 
     function unlock() {
       lockLayer.classList.add("hide");
-      setTimeout(() => lockLayer.remove(), 260);
+      setTimeout(() => {
+        lockLayer.style.display = "none";
+        lockLayer.setAttribute("aria-hidden", "true");
+      }, 260);
       queryInput.focus();
-      if (rememberSessions.checked) localStorage.setItem(KEY_UNLOCKED, "1");
+      if (rememberSessions.checked && quickUnlock.checked) {
+        localStorage.setItem(KEY_UNLOCKED, "1");
+      } else {
+        localStorage.removeItem(KEY_UNLOCKED);
+      }
       setStatus("Unlocked. Ready to launch.", "success");
       const last = localStorage.getItem("marshall-last");
       if (autoResume.checked && last) {
@@ -1187,8 +1262,12 @@
       e.preventDefault();
       if (Date.now() < lockoutUntil) return;
       const val = lockPass.value.trim();
-      if (val === PASSWORD) {
-        setLockStatus("Unlocked.", "success");
+      const matchesShared = val === PASSWORD;
+      const matchesPersonal = personalPass && val === personalPass;
+      if (matchesShared || matchesPersonal) {
+        attempts = 0;
+        const which = matchesPersonal ? "personal key" : "shared key";
+        setLockStatus(`Unlocked with ${which}.`, "success");
         unlock();
       } else {
         attempts += 1;
@@ -1220,6 +1299,12 @@
       testEndpointHealth(endpointSelect.value);
     });
 
+    savePassBtn.addEventListener("click", savePersonalPassword);
+
+    quickUnlock.addEventListener("change", () => {
+      localStorage.setItem(KEY_QUICK, quickUnlock.checked ? "1" : "0");
+    });
+
     addCustom.addEventListener("click", addCustomShortcut);
 
     function applyTheme(name) {
@@ -1249,7 +1334,6 @@
     rememberSessions.addEventListener("change", () => {
       if (!rememberSessions.checked) {
         localStorage.removeItem(KEY_THEME);
-        localStorage.removeItem(KEY_UNLOCKED);
         localStorage.removeItem(KEY_RECENT);
         localStorage.removeItem("marshall-last");
         localStorage.removeItem(KEY_CUSTOM);
@@ -1257,6 +1341,11 @@
         localStorage.removeItem(KEY_AUTORESTORE);
         localStorage.removeItem(KEY_STEALTH);
         localStorage.removeItem(KEY_BLOCKGUARD);
+        localStorage.removeItem(KEY_UNLOCKED);
+        localStorage.removeItem(KEY_PERSONAL);
+        localStorage.removeItem(KEY_QUICK);
+        personalPass = "";
+        refreshLockHint();
       } else {
         if (localStorage.getItem(KEY_THEME)) applyTheme(localStorage.getItem(KEY_THEME));
         if (localStorage.getItem(KEY_UNLOCKED) === "1") unlock();
@@ -1361,7 +1450,32 @@
       });
       diagnostics.append(pingBtn, document.createElement("br"), purge);
 
-      wrap.append(frameTools, recenter, diagnostics);
+      const access = document.createElement("div");
+      access.className = "settings-item";
+      access.innerHTML = "<strong>Access</strong><p class=\"hint\">Reset the gate or personal password if you need to lock down again.</p>";
+      const clearPass = document.createElement("button");
+      clearPass.className = "button-ghost";
+      clearPass.textContent = "Clear personal password";
+      clearPass.addEventListener("click", () => {
+        personalPass = "";
+        localStorage.removeItem(KEY_PERSONAL);
+        refreshLockHint();
+        setStatus("Personal password cleared.", "success");
+      });
+      const relock = document.createElement("button");
+      relock.className = "button-ghost";
+      relock.textContent = "Require unlock again";
+      relock.addEventListener("click", () => {
+        localStorage.removeItem(KEY_UNLOCKED);
+        lockLayer.style.display = "block";
+        lockLayer.classList.remove("hide");
+        lockLayer.removeAttribute("aria-hidden");
+        lockPass.value = "";
+        lockPass.focus();
+      });
+      access.append(clearPass, document.createElement("br"), relock);
+
+      wrap.append(frameTools, recenter, diagnostics, access);
       adminContent.innerHTML = "";
       adminContent.appendChild(wrap);
     }
@@ -1388,6 +1502,15 @@
     const savedGuard = localStorage.getItem(KEY_BLOCKGUARD);
     if (savedGuard !== null) blockGuard.checked = savedGuard === "1";
 
+    const savedQuick = localStorage.getItem(KEY_QUICK);
+    if (savedQuick !== null) quickUnlock.checked = savedQuick === "1";
+
+    refreshLockHint();
+    if (personalPass) {
+      passStatus.textContent = "Personal password loaded for this device.";
+      passStatus.className = "status success";
+    }
+
     try {
       const storedCustom = JSON.parse(localStorage.getItem(KEY_CUSTOM) || "[]");
       if (Array.isArray(storedCustom)) {
@@ -1398,7 +1521,7 @@
       console.error("Failed to load custom shortcuts", err);
     }
 
-    if (localStorage.getItem(KEY_UNLOCKED) === "1") {
+    if (localStorage.getItem(KEY_UNLOCKED) === "1" && quickUnlock.checked) {
       unlock();
     } else {
       lockPass.focus();
