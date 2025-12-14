@@ -554,8 +554,8 @@
     const KEY_PERSONAL = "marshall-personal-pass";
     const KEY_QUICK = "marshall-quick-unlock";
     const SCRAMJET_ENDPOINTS = [
-      { label: "Mercury GitHub (default)", url: "https://mercuryworkshop.github.io/scramjet/" },
-      { label: "Scramjet Worker", url: "https://scramjet.workers.dev/" },
+      { label: "Scramjet Worker (default)", url: "https://scramjet.workers.dev/" },
+      { label: "Mercury GitHub", url: "https://mercuryworkshop.github.io/scramjet/" },
       { label: "Nightly Mirror", url: "https://scramjet.deno.dev/" }
     ];
     const queryInput = document.getElementById("query");
@@ -624,6 +624,26 @@
     let adminUnlocked = false;
     let activeEndpoint = SCRAMJET_ENDPOINTS[0].url;
     let customItems = [];
+
+    window.addEventListener("message", (event) => {
+      if (!event || typeof event.data !== "object") return;
+      const { type } = event.data;
+      if (type === "scramjet-load") {
+        clearTimeout(loadTimer);
+        clearTimeout(blockTimer);
+        blockHints.textContent = "";
+        setStatus("Running inside Scramjet (on-page).", "success");
+        setProgress(100);
+        setTimeout(() => setProgress(0, false), 600);
+        pushRecent(currentUrl);
+      } else if (type === "scramjet-error") {
+        setStatus("Scramjet reported a load error. Using safe viewer.", "error");
+        safeViewer(currentUrl);
+        handleBlocked(buildScramjetUrl(currentUrl), currentUrl);
+      } else if (type === "scramjet-load-wait") {
+        blockHints.textContent = "If this stalls, try another endpoint or use popout in the toolbar.";
+      }
+    });
 
     const themes = {
       origin: {
@@ -808,12 +828,17 @@
       return `https://duckduckgo.com/?q=${encoded}`;
     }
 
-      function buildScramjetUrl(targetUrl) {
-        const scramjetUrl = new URL(activeEndpoint);
-        scramjetUrl.searchParams.set("url", targetUrl);
-        scramjetUrl.searchParams.set("embed", "1");
-        return scramjetUrl.toString();
-      }
+    function buildScramjetUrl(targetUrl) {
+      const scramjetUrl = new URL(activeEndpoint);
+      scramjetUrl.searchParams.set("url", targetUrl);
+      scramjetUrl.searchParams.set("embed", "1");
+      return scramjetUrl.toString();
+    }
+
+    function buildBridgeDoc(scramjetUrl) {
+      const safe = scramjetUrl.replace(/"/g, "&quot;");
+      return `<!doctype html><html><head><meta charset="utf-8"><title>Scramjet bridge</title><meta name="referrer" content="no-referrer"><style>body{margin:0;background:#05070f;color:#9fb2cc;font-family:Inter,system-ui;height:100vh;display:grid;place-items:center;}main{max-width:920px;width:95vw;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.03);border-radius:14px;box-shadow:0 12px 55px rgba(0,0,0,0.5);padding:16px;}p{margin:12px 0 0;text-align:center;color:#8ba3c4;line-height:1.5;font-size:13px;}iframe{width:100%;height:78vh;border:1px solid rgba(255,255,255,0.12);border-radius:12px;background:#0a0f1d;}</style></head><body><main><strong style="font-size:14px;">Connecting via Scramjet…</strong><iframe id="inner" src="${safe}" allowfullscreen referrerpolicy="no-referrer" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-downloads"></iframe><p>If your network blocks this, MARSHALL will swap to a safe in-page viewer.</p></main><script>const inner=document.getElementById('inner');inner.addEventListener('load',()=>parent.postMessage({type:'scramjet-load'},'*'),{once:true});inner.addEventListener('error',()=>parent.postMessage({type:'scramjet-error'},'*'),{once:true});setTimeout(()=>parent.postMessage({type:'scramjet-load-wait'},'*'),4500);</script></body></html>`;
+    }
 
     function showFrame() { viewer.classList.add("active"); }
 
@@ -963,28 +988,12 @@
         setStatus("Loading with Scramjet...", "");
         setProgress(12, true);
         blockTimer = setTimeout(() => handleBlocked(scramjetUrl, url), 6500);
-        frame.src = scramjetUrl;
+        frame.srcdoc = buildBridgeDoc(scramjetUrl);
         fallbackStatus.textContent = "";
         loadTimer = setTimeout(() => {
           setStatus("If it looks stuck, try reloading, change endpoint, or open directly in-frame.", "error");
           addFallbackActions(scramjetUrl, url);
         }, 8000);
-
-        frame.onload = () => {
-          clearTimeout(loadTimer);
-          clearTimeout(blockTimer);
-          blockHints.textContent = "";
-          setStatus("Running inside Scramjet (stays on this page).", "success");
-          setProgress(100);
-          setTimeout(() => setProgress(0, false), 600);
-          pushRecent(url);
-        };
-
-        frame.onerror = () => {
-          setStatus("Frame reported an error. Trying safe viewer.", "error");
-          safeViewer(url);
-          handleBlocked(scramjetUrl, url);
-        };
 
         const interval = setInterval(() => {
           const width = parseFloat(progressBar.style.width) || 0;
@@ -1032,6 +1041,7 @@
 
     function handleBlocked(scramjetUrl, directUrl) {
       clearTimeout(loadTimer);
+      clearTimeout(blockTimer);
       blockHints.textContent = "Chrome blocked the embed or returned file-not-found. Switched to the safe viewer; try another endpoint, layered embed, cloak, or popout.";
       setStatus("Embed blocked or refused by Chrome.", "error");
       addFallbackActions(scramjetUrl, directUrl);
