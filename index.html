@@ -3,26 +3,24 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>MARSHALL06178 | Scramjet Portal</title>
+  <title>MARSHALL06178</title>
   <style>
-    @import url("https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700&display=swap");
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&display=swap');
 
     :root {
-      --bg: radial-gradient(circle at 12% 18%, rgba(159, 216, 255, 0.16), transparent 32%),
-        radial-gradient(circle at 82% 10%, rgba(150, 168, 255, 0.16), transparent 36%),
-        radial-gradient(circle at 50% 78%, rgba(140, 244, 210, 0.18), transparent 48%),
-        #04060d;
-      --panel: rgba(255, 255, 255, 0.045);
-      --panel-strong: rgba(255, 255, 255, 0.09);
-      --border: rgba(255, 255, 255, 0.08);
-      --text: #f7fbff;
-      --muted: #9fb2cc;
+      --bg: radial-gradient(circle at 15% 20%, rgba(141, 212, 255, 0.12), transparent 34%),
+        radial-gradient(circle at 80% 10%, rgba(126, 165, 255, 0.14), transparent 38%),
+        radial-gradient(circle at 40% 75%, rgba(120, 244, 201, 0.16), transparent 52%),
+        #060912;
+      --panel: rgba(255, 255, 255, 0.04);
+      --panel-strong: rgba(255, 255, 255, 0.08);
+      --border: rgba(255, 255, 255, 0.09);
+      --text: #f3f7ff;
+      --muted: #9baac6;
       --accent: #7ce0c4;
-      --accent-2: #7fa7ff;
-      --accent-3: #ffd48b;
+      --accent-2: #7ba6ff;
       --danger: #ff9b9b;
       --radius: 18px;
-      --shadow: 0 16px 70px rgba(0, 0, 0, 0.5);
     }
 
     * { box-sizing: border-box; }
@@ -30,136 +28,79 @@
     body {
       margin: 0;
       min-height: 100vh;
-      font-family: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
-      background: var(--bg);
-      color: var(--text);
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 28px 14px 40px;
+      background: var(--bg);
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+      color: var(--text);
+      padding: 28px 12px 40px;
       letter-spacing: 0.1px;
     }
 
     .shell {
-      width: min(1180px, 100%);
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.025));
+      width: min(1200px, 100%);
+      background: linear-gradient(140deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.03));
       border: 1px solid var(--border);
       border-radius: 26px;
-      padding: 28px;
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(14px);
-      transform: translateY(12px);
-      opacity: 0;
-      animation: floatIn 650ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      padding: 24px;
+      box-shadow: 0 18px 60px rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(12px);
+      animation: rise 620ms cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     header {
       display: flex;
       justify-content: space-between;
-      align-items: center;
       gap: 12px;
-      margin-bottom: 6px;
+      align-items: center;
       flex-wrap: wrap;
+      margin-bottom: 14px;
     }
 
     .brand {
-      font-size: 32px;
-      letter-spacing: 0.2px;
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
+      font-size: 30px;
       font-weight: 800;
     }
 
-    .badge {
-      padding: 7px 12px;
-      border-radius: 999px;
-      background: rgba(126, 231, 198, 0.12);
-      color: var(--accent);
-      font-size: 12px;
-      border: 1px solid rgba(126, 231, 198, 0.35);
-      box-shadow: 0 10px 30px rgba(126, 231, 198, 0.18);
-    }
+    .badge { padding: 7px 11px; border-radius: 999px; background: rgba(124, 224, 196, 0.16); color: var(--accent); border: 1px solid rgba(124, 224, 196, 0.34); box-shadow: 0 12px 30px rgba(124, 224, 196, 0.18); font-size: 12px; }
+    .muted { color: var(--muted); }
 
-    .hint { color: var(--muted); margin: 0; }
-
-    .tabs {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 10px;
-      margin: 16px 0 18px;
-    }
-
-    .tab-btn {
-      padding: 12px 14px;
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      background: linear-gradient(140deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
-      color: var(--text);
-      cursor: pointer;
-      text-align: left;
-      transition: transform 160ms ease, border-color 170ms ease, box-shadow 190ms ease, background 200ms ease;
-    }
-
-    .tab-btn.active {
-      border-color: rgba(126, 231, 198, 0.6);
-      box-shadow: 0 10px 34px rgba(126, 231, 198, 0.22);
-      transform: translateY(-1px);
-      background: linear-gradient(140deg, rgba(126, 231, 198, 0.14), rgba(126, 231, 198, 0.06));
-    }
-
-    .tab-panel { display: none; }
-    .tab-panel.active { display: block; }
-
-    .grid {
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 14px;
-    }
-
+    .grid { display: grid; grid-template-columns: 1.35fr 1fr; gap: 14px; }
     @media (max-width: 980px) { .grid { grid-template-columns: 1fr; } }
 
     .card {
       background: var(--panel);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 18px;
+      padding: 16px;
       box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
-      margin-bottom: 12px;
-      animation: rise 620ms ease both;
+      animation: fadeUp 600ms ease both;
     }
 
-    .card h2 { margin: 0 0 6px; letter-spacing: 0.1px; }
-    .card p { margin: 0 0 12px; color: var(--muted); line-height: 1.5; }
+    .card h2 { margin: 0 0 8px; letter-spacing: 0.15px; }
+    .card p { margin: 0 0 12px; color: var(--muted); }
 
-    .search-row {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 10px;
-      align-items: center;
-    }
-
+    .search-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; }
     input[type="text"], input[type="password"], select {
       width: 100%;
-      padding: 14px 16px;
+      padding: 14px 15px;
       border-radius: 14px;
       border: 1px solid rgba(255, 255, 255, 0.12);
       background: rgba(255, 255, 255, 0.05);
       color: var(--text);
       font-size: 15px;
       outline: none;
-      transition: border-color 160ms ease, transform 180ms ease, box-shadow 200ms ease, background 160ms ease;
+      transition: border-color 160ms ease, transform 180ms ease, box-shadow 190ms ease, background 170ms ease;
     }
 
-    input:focus, select:focus {
-      border-color: var(--accent);
-      transform: translateY(-1px);
-      box-shadow: 0 12px 26px rgba(124, 231, 200, 0.18);
-      background: rgba(255, 255, 255, 0.08);
-    }
+    input:focus, select:focus { border-color: var(--accent); transform: translateY(-1px); box-shadow: 0 12px 26px rgba(124, 231, 200, 0.18); background: rgba(255, 255, 255, 0.08); }
 
     button {
-      padding: 13px 18px;
+      padding: 13px 16px;
       border-radius: 14px;
       border: none;
       cursor: pointer;
@@ -168,1387 +109,331 @@
       font-weight: 800;
       letter-spacing: 0.2px;
       box-shadow: 0 16px 34px rgba(122, 179, 255, 0.25);
-      transition: transform 160ms ease, box-shadow 190ms ease, filter 160ms ease, translate 160ms ease;
+      transition: transform 150ms ease, box-shadow 180ms ease, filter 160ms ease;
     }
 
-    button:hover { transform: translateY(-1px); box-shadow: 0 18px 38px rgba(124, 231, 200, 0.26); }
+    button:hover { transform: translateY(-1px); box-shadow: 0 18px 40px rgba(124, 231, 200, 0.25); }
     button:active { transform: translateY(0); }
 
-    .button-ghost {
-      background: rgba(255, 255, 255, 0.05);
-      color: var(--text);
-      box-shadow: none;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-    }
+    .button-ghost { background: rgba(255, 255, 255, 0.05); color: var(--text); box-shadow: none; border: 1px solid rgba(255, 255, 255, 0.12); }
+    .button-danger { background: var(--danger); color: #1f0b0b; box-shadow: none; }
 
     .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .chip { padding: 9px 12px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(255, 255, 255, 0.05); color: var(--text); font-size: 13px; cursor: pointer; transition: transform 160ms ease, border-color 170ms ease, background 170ms ease; }
+    .chip:hover { transform: translateY(-1px); border-color: rgba(124, 224, 196, 0.6); background: rgba(124, 224, 196, 0.1); }
 
-    .chip {
-      padding: 9px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      background: rgba(255, 255, 255, 0.04);
-      color: var(--text);
-      font-size: 13px;
-      cursor: pointer;
-      transition: transform 150ms ease, border-color 170ms ease, background 160ms ease;
-    }
+    .links { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-top: 8px; }
+    .link-tile { padding: 12px 13px; border-radius: 14px; border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(255, 255, 255, 0.05); color: var(--text); text-decoration: none; transition: transform 150ms ease, border-color 170ms ease, background 170ms ease; display: block; }
+    .link-tile:hover { transform: translateY(-1px); border-color: rgba(124, 224, 196, 0.5); background: rgba(124, 224, 196, 0.08); }
 
-    .chip:hover { transform: translateY(-1px); border-color: rgba(124, 231, 200, 0.5); background: rgba(124, 231, 200, 0.08); }
+    .toolbar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+    .toolbar button { padding: 11px 12px; font-size: 13px; }
 
-    .links { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 10px; }
+    .viewer-wrap { position: relative; border-radius: 18px; overflow: hidden; border: 1px solid var(--border); background: var(--panel-strong); min-height: 360px; }
+    iframe { width: 100%; height: 100%; border: none; background: #0b101c; }
 
-    .link-card {
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      padding: 12px 14px;
-      background: rgba(255, 255, 255, 0.035);
-      color: var(--text);
-      text-decoration: none;
-      transition: transform 150ms ease, border-color 170ms ease, background 160ms ease;
-      display: block;
-      cursor: pointer;
-      text-align: left;
-    }
+    .status { margin-top: 6px; font-size: 13px; color: var(--muted); min-height: 18px; }
+    .pill { display: inline-flex; align-items: center; gap: 6px; padding: 8px 11px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(255, 255, 255, 0.06); margin-right: 6px; font-size: 13px; }
+    .pill.danger { border-color: rgba(255, 155, 155, 0.35); color: var(--danger); background: rgba(255, 155, 155, 0.1); }
 
-    .link-card:hover { transform: translateY(-1px); border-color: rgba(124, 231, 200, 0.55); background: rgba(124, 231, 200, 0.06); }
-
-    .status { margin-top: 10px; color: var(--muted); font-size: 14px; min-height: 20px; }
-    .status.error { color: var(--danger); }
-    .status.success { color: var(--accent); }
-
-    .viewer-card { margin-top: 10px; }
-
-    .viewer {
-      margin-top: 12px;
-      border-radius: 16px;
-      border: 1px solid var(--border);
-      overflow: hidden;
-      background: rgba(255, 255, 255, 0.04);
-      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
-      transition: max-height 260ms ease, opacity 240ms ease, transform 200ms ease;
-      max-height: 0;
-      opacity: 0;
-    }
-
-    .viewer.active { max-height: 820px; opacity: 1; }
-    .viewer.collapsed { max-height: 0 !important; opacity: 0 !important; }
-
-    .viewer iframe {
-      display: block;
-      width: 100%;
-      height: 760px;
-      border: none;
-      background: #050a16;
-    }
-
-    .viewer.fullscreen {
-      position: fixed;
-      inset: 16px;
-      max-height: none;
-      z-index: 9;
-      box-shadow: 0 22px 60px rgba(0, 0, 0, 0.55);
-      opacity: 1;
-    }
-
-    body.stealth {
-      background: #0d1117;
-      color: #d6deed;
-    }
-
-    body.stealth .shell { box-shadow: none; border-color: rgba(255, 255, 255, 0.04); }
-    body.stealth .brand { font-weight: 700; letter-spacing: 0.2px; }
-    body.stealth .badge { background: rgba(255, 255, 255, 0.06); color: #9fb1d3; border-color: rgba(255, 255, 255, 0.14); }
-    body.stealth button { box-shadow: none; }
-    body.stealth .toolbar .pill { background: rgba(255, 255, 255, 0.04); }
-
-    .toolbar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-    .toolbar .grow { flex: 1; min-width: 220px; }
-
-    .pill { padding: 9px 12px; border-radius: 12px; background: rgba(255, 255, 255, 0.05); color: var(--muted); font-size: 13px; }
-    .pill strong { color: var(--text); }
-    .pill.good { color: var(--accent); }
-    .pill.warn { color: var(--accent-3); }
-
-    .stack { display: flex; gap: 10px; flex-wrap: wrap; }
-
-    .recent { margin-top: 14px; display: flex; flex-direction: column; gap: 8px; }
-    .recent-item { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--border); background: rgba(255, 255, 255, 0.03); }
-    .recent-item span { color: var(--muted); word-break: break-all; }
-
-    .caps { font-size: 12px; color: var(--danger); min-height: 16px; }
-
-    .overlay {
+    .lock-screen {
       position: fixed;
       inset: 0;
-      background: rgba(5, 7, 17, 0.88);
-      backdrop-filter: blur(12px);
-      display: grid;
-      place-items: center;
-      z-index: 10;
-      transition: opacity 240ms ease;
+      background: rgba(4, 6, 13, 0.78);
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 99;
+      opacity: 1;
+      transition: opacity 220ms ease;
     }
 
-    .overlay.hide { opacity: 0; pointer-events: none; }
+    .lock-screen.hidden { opacity: 0; pointer-events: none; }
 
     .lock-card {
-      width: min(420px, 92vw);
-      padding: 22px;
-      border-radius: 18px;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      box-shadow: 0 16px 52px rgba(0, 0, 0, 0.38);
-      animation: floatIn 420ms ease;
+      width: min(420px, 90%);
+      background: linear-gradient(150deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04));
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 22px 20px;
+      box-shadow: 0 18px 60px rgba(0, 0, 0, 0.5);
+      text-align: center;
+      animation: rise 620ms ease;
     }
 
-    .lock-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 8px; }
-    .lock-card h2 { margin: 0; }
+    .lock-card h2 { margin: 0 0 6px; }
     .lock-card p { margin: 0 0 12px; color: var(--muted); }
+    .lock-card .hint { font-size: 13px; margin-bottom: 10px; }
 
-    .pass-row { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; }
-    .toggle-pass { padding: 12px 14px; }
+    .toggle { display: flex; align-items: center; gap: 8px; margin-top: 8px; font-size: 13px; color: var(--muted); justify-content: center; }
+    .toggle input { width: 16px; height: 16px; }
 
-    .settings-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
-    .settings-item { border: 1px dashed var(--border); border-radius: 12px; padding: 12px; background: rgba(255, 255, 255, 0.03); }
-
-    .admin-locked { border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 10px; background: rgba(255, 255, 255, 0.02); color: var(--muted); }
-
-    .progress {
-      position: relative;
-      width: 100%;
-      height: 6px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.06);
-      overflow: hidden;
-      margin-top: 10px;
-      opacity: 0;
-      transition: opacity 160ms ease;
-    }
-
-    .progress .bar {
-      position: absolute;
-      inset: 0;
-      transform-origin: left;
-      background: linear-gradient(90deg, var(--accent), var(--accent-2));
-      width: 0;
-      transition: width 200ms ease;
-    }
-
-    .mini-label { font-size: 12px; color: var(--muted); }
-
-    @keyframes floatIn {
-      from { opacity: 0; transform: translateY(16px) scale(0.99); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
-    }
-
-    @keyframes rise {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+    @keyframes rise { from { transform: translateY(12px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    @keyframes fadeUp { from { transform: translateY(8px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
   </style>
 </head>
 <body>
-  <div class="shell">
+  <div class="shell" aria-live="polite">
     <header>
-      <div class="brand">MARSHALL06178 <span class="badge">Scramjet embedded</span></div>
-      <p class="hint">Simpler tabbed control center with Scramjet, shortcuts, settings, and admin tools.</p>
+      <div class="brand">MARSHALL06178 <span class="badge">Scramjet</span></div>
+      <div class="muted">Stay on-page, bypass blocks, launch faster.</div>
     </header>
 
-    <div class="tabs">
-      <button class="tab-btn active" data-tab="launch">Launch</button>
-      <button class="tab-btn" data-tab="shortcuts">Shortcuts</button>
-      <button class="tab-btn" data-tab="settings">Settings</button>
-      <button class="tab-btn" data-tab="admin">Admin panel</button>
-    </div>
-
-    <section class="tab-panel active" id="tab-launch">
-      <div class="grid">
-        <section class="card">
-          <h2>Launch center</h2>
-          <p>Type a query or paste a URL. Everything stays inside this page with Scramjet.</p>
-          <form class="search" autocomplete="off">
-            <div class="search-row">
-              <input id="query" type="text" placeholder="Search the web or enter a link" />
-              <button type="submit">Open in Scramjet</button>
-            </div>
-          </form>
+    <div class="grid">
+      <div>
+        <div class="card">
+          <h2>Launch</h2>
+          <p class="muted">Type a link or search and send it through the Scramjet relay. The viewer stays here.</p>
+          <div class="search-row">
+            <input type="text" id="input" placeholder="Enter URL or search" autocomplete="off" />
+            <button id="launch">Open</button>
+          </div>
           <div class="chips" id="chips"></div>
+          <div class="toolbar">
+            <select id="endpoint"></select>
+            <button class="button-ghost" id="retry">Retry</button>
+            <button class="button-ghost" id="clear">Clear</button>
+            <button class="button-ghost" id="fullscreen">Fullscreen</button>
+            <button class="button-ghost" id="bypass">Bypass popout</button>
+          </div>
           <div class="status" id="status"></div>
-          <div class="caps" id="caps-warning"></div>
-        </section>
+        </div>
 
-        <section class="card">
-          <h2>Quick deck</h2>
-          <p>Jump to popular destinations instantly.</p>
+        <div class="card">
+          <h2>Shortcuts</h2>
+          <p class="muted">Quick jump into favorites through Scramjet.</p>
           <div class="links" id="links"></div>
-          <div class="status" id="fallback"></div>
-        </section>
+        </div>
       </div>
 
-      <section class="card viewer-card">
-        <div class="toolbar">
-          <div class="pill"><strong>Scramjet</strong> stays on this page</div>
-          <div class="pill good" id="toolbar-status">Idle</div>
-          <div class="pill warn" id="endpoint-pill"></div>
-          <div class="grow stack">
-            <button type="button" class="button-ghost" id="reload">Reload</button>
-            <button type="button" class="button-ghost" id="open-direct">Open directly (embedded)</button>
-            <button type="button" class="button-ghost" id="cloak">Cloaked retry</button>
-            <button type="button" class="button-ghost" id="popout">Bypass popout</button>
-            <button type="button" class="button-ghost" id="fullscreen">Fullscreen</button>
-            <button type="button" class="button-ghost" id="collapse">Collapse</button>
-            <button type="button" class="button-ghost" id="clear">Clear frame</button>
-            <button type="button" class="button-ghost" id="random-launch">Surprise me</button>
+      <div>
+        <div class="card viewer-card">
+          <h2>Viewer</h2>
+          <div class="viewer-wrap">
+            <iframe id="frame" title="Scramjet viewer" sandbox="allow-scripts allow-forms allow-same-origin allow-popups allow-modals allow-downloads"></iframe>
           </div>
+          <div class="status" id="frameStatus"></div>
         </div>
-        <div class="progress" id="load-progress"><div class="bar" id="progress-bar"></div></div>
-        <div class="viewer" id="viewer">
-          <iframe id="scramjet-frame" title="Scramjet" loading="lazy" sandbox="allow-scripts allow-forms allow-same-origin allow-popups allow-downloads" referrerpolicy="no-referrer"></iframe>
-        </div>
-        <div class="status" id="block-hints"></div>
-        <div class="recent" id="recent"></div>
-      </section>
-    </section>
-
-    <section class="tab-panel" id="tab-shortcuts">
-      <section class="card">
-        <h2>Game launchpad</h2>
-        <p>Shortcut tabs for fast play. Use Scramjet embedding for each launch.</p>
-        <div class="links" id="game-links"></div>
-      </section>
-      <section class="card">
-        <h2>Study & sandbox</h2>
-        <p>Trusted resources that load nicely in the embedded frame.</p>
-        <div class="links" id="study-links"></div>
-      </section>
-    </section>
-
-    <section class="tab-panel" id="tab-settings">
-      <section class="card">
-        <h2>Access & password</h2>
-        <p>Reworked lock with a personal pass option plus quick unlock controls.</p>
-        <div class="settings-list">
-          <div class="settings-item">
-            <label for="personal-pass">Set a personal password</label>
-            <input id="personal-pass" type="password" placeholder="New password (min 6 characters)" />
-            <button type="button" class="button-ghost" id="save-pass">Save personal password</button>
-            <div class="status" id="pass-status"></div>
-            <p class="hint">Defaults to the shared key until you save your own. Stored locally for this device only.</p>
-          </div>
-          <div class="settings-item">
-            <label><input type="checkbox" id="quick-unlock" checked /> Auto-unlock after correct pass</label>
-            <p class="hint">Keeps you signed in on this device until you clear it from the admin tab.</p>
-          </div>
-        </div>
-      </section>
-
-      <section class="card">
-        <h2>Appearance & behavior</h2>
-        <p>Pick a theme and tune how the portal responds.</p>
-        <div class="settings-list">
-          <div class="settings-item">
-            <label for="theme">Theme</label>
-            <select id="theme"></select>
-            <div class="status" id="theme-status"></div>
-          </div>
-          <div class="settings-item">
-            <label><input type="checkbox" id="reduced-motion" /> Reduce motion</label>
-            <p class="hint">Turns off oversized animations for lower-distraction use.</p>
-          </div>
-          <div class="settings-item">
-            <label><input type="checkbox" id="remember-sessions" checked /> Remember unlock & theme</label>
-            <p class="hint">Stores your unlock, theme, and last URL locally.</p>
-          </div>
-          <div class="settings-item">
-            <label><input type="checkbox" id="auto-resume" /> Auto-resume last launch on unlock</label>
-            <p class="hint">Automatically reloads the most recent link into Scramjet when you unlock.</p>
-          </div>
-          <div class="settings-item">
-            <label><input type="checkbox" id="stealth-mode" /> Stealth cloak</label>
-            <p class="hint">Tone the UI down and rename the tab if Chrome is watching.</p>
-          </div>
-          <div class="settings-item">
-            <label><input type="checkbox" id="block-guard" checked /> Anti-block assist</label>
-            <p class="hint">Auto-retries with a cloaked embed when the frame is blocked.</p>
-          </div>
-          <div class="settings-item">
-            <label for="endpoint">Scramjet endpoint</label>
-            <select id="endpoint"></select>
-            <div class="stack" style="margin-top:8px">
-              <button type="button" class="button-ghost" id="test-endpoint">Test endpoint</button>
-              <span class="mini-label" id="endpoint-status"></span>
-            </div>
-          </div>
-          <div class="settings-item">
-            <strong>Keyboard shortcuts</strong>
-            <p class="hint">Ctrl/Cmd+K to focus search • Ctrl/Cmd+Shift+F fullscreen • Alt+R reload frame</p>
-          </div>
-        </div>
-      </section>
-      <section class="card">
-        <h2>Custom shortcuts</h2>
-        <p>Add your own quick links to send through Scramjet instantly.</p>
-        <div class="settings-list">
-          <div class="settings-item">
-            <label for="custom-label">Label</label>
-            <input id="custom-label" type="text" placeholder="My site" />
-            <label for="custom-url">URL</label>
-            <input id="custom-url" type="text" placeholder="https://example.com" />
-            <button type="button" class="button-ghost" id="add-custom">Add shortcut</button>
-            <div class="status" id="custom-status"></div>
-          </div>
-          <div class="settings-item" style="grid-column: span 2">
-            <div class="links" id="custom-links"></div>
-          </div>
-        </div>
-      </section>
-    </section>
-
-    <section class="tab-panel" id="tab-admin">
-      <section class="card">
-        <h2>Admin panel</h2>
-        <p>Enter the admin key (FWKZT.MARSHALL) to reveal advanced controls.</p>
-        <div class="pass-row">
-          <input id="admin-pass" type="password" placeholder="Admin password" autocomplete="off" />
-          <button type="button" class="button-ghost" id="admin-unlock">Open</button>
-        </div>
-        <div class="caps" id="admin-caps"></div>
-        <div class="status" id="admin-status"></div>
-        <div id="admin-content" class="admin-locked">Locked. Enter the admin password to manage Scramjet tools.</div>
-      </section>
-    </section>
+      </div>
+    </div>
   </div>
 
-  <div class="overlay" id="lock">
+  <div class="lock-screen" id="lock">
     <div class="lock-card">
-      <div class="lock-header">
-        <h2>Access MARSHALL06178</h2>
-        <span class="badge">Secure gate</span>
-      </div>
-      <p>Enter the access password to continue. Attempts are limited for better protection.</p>
-      <form id="lock-form">
-        <div class="pass-row">
-          <input id="lock-pass" type="password" placeholder="Password" autocomplete="current-password" />
-          <button type="button" class="button-ghost toggle-pass" id="toggle-pass">Show</button>
-        </div>
-        <div class="caps" id="lock-caps"></div>
-        <div class="hint" id="lock-hint"></div>
-        <div style="height: 10px"></div>
-        <button type="submit" style="width: 100%">Unlock</button>
-      </form>
-      <div class="status" id="lock-status"></div>
+      <h2>Access Check</h2>
+      <p>Enter the MARSHALL06178 key to continue.</p>
+      <input type="password" id="lockInput" placeholder="Password" autocomplete="current-password" />
+      <div class="toggle"><input type="checkbox" id="remember" /> <label for="remember">Stay unlocked on this device</label></div>
+      <div class="hint" id="lockHint">Hint: Key changes often. Current key ends with 42.</div>
+      <button id="unlock">Unlock</button>
+      <button class="button-ghost" id="resetPass">Reset saved key</button>
+      <div class="status" id="lockStatus"></div>
     </div>
   </div>
 
   <script>
-    const PASSWORD = "Diddy_42";
-    const ADMIN_PASSWORD = "FWKZT.MARSHALL";
-    const KEY_UNLOCKED = "marshall-unlocked";
-    const KEY_THEME = "marshall-theme";
-    const KEY_RECENT = "marshall-recent";
-    const KEY_CUSTOM = "marshall-custom";
-    const KEY_ENDPOINT = "marshall-endpoint";
-    const KEY_AUTORESTORE = "marshall-auto-resume";
-    const KEY_STEALTH = "marshall-stealth";
-    const KEY_BLOCKGUARD = "marshall-block-guard";
-    const KEY_PERSONAL = "marshall-personal-pass";
-    const KEY_QUICK = "marshall-quick-unlock";
-    const SCRAMJET_ENDPOINTS = [
-      { label: "Scramjet Worker (default)", url: "https://scramjet.workers.dev/" },
-      { label: "Mercury GitHub", url: "https://mercuryworkshop.github.io/scramjet/" },
-      { label: "Nightly Mirror", url: "https://scramjet.deno.dev/" }
-    ];
-    const queryInput = document.getElementById("query");
-    const statusEl = document.getElementById("status");
-    const chipsEl = document.getElementById("chips");
-    const linksEl = document.getElementById("links");
-    const viewer = document.getElementById("viewer");
-    const frame = document.getElementById("scramjet-frame");
-    const lockLayer = document.getElementById("lock");
-    const lockStatus = document.getElementById("lock-status");
-    const lockPass = document.getElementById("lock-pass");
-    const lockCaps = document.getElementById("lock-caps");
-    const lockHint = document.getElementById("lock-hint");
-    const togglePass = document.getElementById("toggle-pass");
-    const capsWarning = document.getElementById("caps-warning");
-    const fallbackStatus = document.getElementById("fallback");
-    const toolbarStatus = document.getElementById("toolbar-status");
-    const endpointPill = document.getElementById("endpoint-pill");
-    const recentEl = document.getElementById("recent");
-    const reloadBtn = document.getElementById("reload");
-    const openDirectBtn = document.getElementById("open-direct");
-    const cloakBtn = document.getElementById("cloak");
-    const popoutBtn = document.getElementById("popout");
-    const fullscreenBtn = document.getElementById("fullscreen");
-    const collapseBtn = document.getElementById("collapse");
-    const clearBtn = document.getElementById("clear");
-    const randomBtn = document.getElementById("random-launch");
-    const progress = document.getElementById("load-progress");
-    const progressBar = document.getElementById("progress-bar");
-    const blockHints = document.getElementById("block-hints");
-    const tabs = document.querySelectorAll(".tab-btn");
-    const panels = document.querySelectorAll(".tab-panel");
-    const themeSelect = document.getElementById("theme");
-    const themeStatus = document.getElementById("theme-status");
-    const reducedMotion = document.getElementById("reduced-motion");
-    const rememberSessions = document.getElementById("remember-sessions");
-    const autoResume = document.getElementById("auto-resume");
-    const stealthMode = document.getElementById("stealth-mode");
-    const blockGuard = document.getElementById("block-guard");
-    const personalPassInput = document.getElementById("personal-pass");
-    const savePassBtn = document.getElementById("save-pass");
-    const passStatus = document.getElementById("pass-status");
-    const quickUnlock = document.getElementById("quick-unlock");
-    const endpointSelect = document.getElementById("endpoint");
-    const endpointStatus = document.getElementById("endpoint-status");
-    const testEndpoint = document.getElementById("test-endpoint");
-    const adminPass = document.getElementById("admin-pass");
-    const adminUnlock = document.getElementById("admin-unlock");
-    const adminStatus = document.getElementById("admin-status");
-    const adminCaps = document.getElementById("admin-caps");
-    const adminContent = document.getElementById("admin-content");
-    const gameLinksEl = document.getElementById("game-links");
-    const studyLinksEl = document.getElementById("study-links");
-    const customLabel = document.getElementById("custom-label");
-    const customUrl = document.getElementById("custom-url");
-    const addCustom = document.getElementById("add-custom");
-    const customStatus = document.getElementById("custom-status");
-    const customLinks = document.getElementById("custom-links");
-    let personalPass = localStorage.getItem(KEY_PERSONAL) || "";
-    let loadTimer;
-    let blockTimer;
-    let currentUrl = "";
-    let recentItems = [];
-    let attempts = 0;
-    let lockoutUntil = 0;
-    let adminUnlocked = false;
-    let activeEndpoint = SCRAMJET_ENDPOINTS[0].url;
-    let customItems = [];
+    const STORAGE_KEY = 'marshall-unlock';
+    const PASSWORD = 'Diddy_42';
+    const input = document.getElementById('input');
+    const launchBtn = document.getElementById('launch');
+    const chips = document.getElementById('chips');
+    const links = document.getElementById('links');
+    const frame = document.getElementById('frame');
+    const status = document.getElementById('status');
+    const frameStatus = document.getElementById('frameStatus');
+    const endpointSelect = document.getElementById('endpoint');
+    const retryBtn = document.getElementById('retry');
+    const clearBtn = document.getElementById('clear');
+    const fullscreenBtn = document.getElementById('fullscreen');
+    const bypassBtn = document.getElementById('bypass');
+    const lock = document.getElementById('lock');
+    const lockInput = document.getElementById('lockInput');
+    const lockStatus = document.getElementById('lockStatus');
+    const unlockBtn = document.getElementById('unlock');
+    const remember = document.getElementById('remember');
+    const resetPass = document.getElementById('resetPass');
 
-    window.addEventListener("message", (event) => {
-      if (!event || typeof event.data !== "object") return;
-      const { type } = event.data;
-      if (type === "scramjet-load") {
-        clearTimeout(loadTimer);
-        clearTimeout(blockTimer);
-        blockHints.textContent = "";
-        setStatus("Running inside Scramjet (on-page).", "success");
-        setProgress(100);
-        setTimeout(() => setProgress(0, false), 600);
-        pushRecent(currentUrl);
-      } else if (type === "scramjet-error") {
-        setStatus("Scramjet reported a load error. Using safe viewer.", "error");
-        safeViewer(currentUrl);
-        handleBlocked(buildScramjetUrl(currentUrl), currentUrl);
-      } else if (type === "scramjet-load-wait") {
-        blockHints.textContent = "If this stalls, try another endpoint or use popout in the toolbar.";
-      }
-    });
-
-    const themes = {
-      origin: {
-        label: "Origin (default)",
-        values: {
-          "--bg": "radial-gradient(circle at 20% 20%, rgba(103, 237, 198, 0.08), transparent 36%), radial-gradient(circle at 82% 14%, rgba(129, 172, 255, 0.12), transparent 42%), radial-gradient(circle at 48% 82%, rgba(129, 211, 255, 0.08), transparent 48%), #050814",
-          "--accent": "#7ee7c6",
-          "--accent-2": "#7fb3ff",
-          "--accent-3": "#ffda7f",
-          "--panel": "rgba(255, 255, 255, 0.05)",
-          "--panel-strong": "rgba(255, 255, 255, 0.08)",
-          "--border": "rgba(255, 255, 255, 0.08)",
-          "--text": "#f6f8ff",
-          "--muted": "#9fb1d3",
-          "--danger": "#ff7b7b"
-        },
-      },
-      neon: {
-        label: "Neon Vapor",
-        values: {
-          "--bg": "radial-gradient(circle at 18% 22%, rgba(255, 0, 214, 0.12), transparent 42%), radial-gradient(circle at 80% 16%, rgba(90, 255, 255, 0.18), transparent 44%), linear-gradient(135deg, #090313, #0a1a2b)",
-          "--accent": "#ff7dff",
-          "--accent-2": "#6af7ff",
-          "--accent-3": "#f5ff7a",
-          "--panel": "rgba(255, 255, 255, 0.04)",
-          "--panel-strong": "rgba(255, 255, 255, 0.07)",
-          "--border": "rgba(255, 255, 255, 0.12)",
-          "--text": "#f5f6ff",
-          "--muted": "#b5c3ff",
-          "--danger": "#ff8ba3"
-        },
-      },
-      dusk: {
-        label: "Dusk Matte",
-        values: {
-          "--bg": "radial-gradient(circle at 12% 18%, rgba(255, 187, 110, 0.12), transparent 36%), radial-gradient(circle at 76% 12%, rgba(108, 210, 255, 0.18), transparent 44%), linear-gradient(145deg, #0d111a, #161b27)",
-          "--accent": "#ffd08a",
-          "--accent-2": "#8ad8ff",
-          "--accent-3": "#baffc3",
-          "--panel": "rgba(255, 255, 255, 0.04)",
-          "--panel-strong": "rgba(255, 255, 255, 0.07)",
-          "--border": "rgba(255, 255, 255, 0.1)",
-          "--text": "#f7f2e9",
-          "--muted": "#c7c1b3",
-          "--danger": "#ff9b7b"
-        },
-      },
-      focus: {
-        label: "Focus Green",
-        values: {
-          "--bg": "radial-gradient(circle at 12% 18%, rgba(170, 255, 199, 0.2), transparent 36%), radial-gradient(circle at 76% 12%, rgba(117, 203, 255, 0.14), transparent 42%), linear-gradient(160deg, #05160f, #0b1e16)",
-          "--accent": "#8fffb5",
-          "--accent-2": "#5ed6ff",
-          "--accent-3": "#ffe59f",
-          "--panel": "rgba(255, 255, 255, 0.05)",
-          "--panel-strong": "rgba(255, 255, 255, 0.08)",
-          "--border": "rgba(255, 255, 255, 0.12)",
-          "--text": "#eafff2",
-          "--muted": "#a7cbbb",
-          "--danger": "#ff8b8b"
-        },
-      },
-      midnight: {
-        label: "Midnight Circuit",
-        values: {
-          "--bg": "radial-gradient(circle at 12% 20%, rgba(94, 207, 255, 0.22), transparent 32%), radial-gradient(circle at 70% 12%, rgba(255, 89, 184, 0.16), transparent 42%), linear-gradient(160deg, #040610, #0c1324)",
-          "--accent": "#5ad7ff",
-          "--accent-2": "#ff7bc0",
-          "--accent-3": "#ffd48c",
-          "--panel": "rgba(255, 255, 255, 0.05)",
-          "--panel-strong": "rgba(255, 255, 255, 0.09)",
-          "--border": "rgba(255, 255, 255, 0.12)",
-          "--text": "#e7f3ff",
-          "--muted": "#9bb8d9",
-          "--danger": "#ff9ea3"
-        },
-      },
-      sunrise: {
-        label: "Sunrise Ember",
-        values: {
-          "--bg": "radial-gradient(circle at 16% 18%, rgba(255, 204, 119, 0.2), transparent 34%), radial-gradient(circle at 80% 10%, rgba(255, 126, 152, 0.16), transparent 44%), linear-gradient(145deg, #0d0f1a, #1c1420)",
-          "--accent": "#ffb27f",
-          "--accent-2": "#ff7fa5",
-          "--accent-3": "#8ad8ff",
-          "--panel": "rgba(255, 255, 255, 0.04)",
-          "--panel-strong": "rgba(255, 255, 255, 0.07)",
-          "--border": "rgba(255, 255, 255, 0.1)",
-          "--text": "#fff3eb",
-          "--muted": "#e3c8be",
-          "--danger": "#ff8c7d"
-        },
-      },
-    };
-
-    const presets = [
-      "fun free games",
-      "retro emulators",
-      "math puzzles",
-      "space news",
-      "cool wallpapers",
-      "coding sandboxes",
-      "browser arcades"
+    const endpoints = [
+      { label: 'Worker mirror (default)', url: 'https://scramjet.workers.dev/?url=' },
+      { label: 'Scramjet main', url: 'https://scramjet.tech/?url=' },
+      { label: 'Proxy mirror', url: 'https://scramjet-proxy.pages.dev/?url=' },
     ];
 
-    const quickLinks = [
-      { label: "Itch.io games", url: "https://itch.io/games" },
-      { label: "Classic Reload", url: "https://www.classicreload.com/" },
-      { label: "CoolMath Games", url: "https://www.coolmathgames.com/" },
-      { label: "CrazyGames", url: "https://www.crazygames.com/" },
-      { label: "Poki", url: "https://poki.com" },
-      { label: "Archive.org", url: "https://archive.org/" },
-      { label: "Wikipedia", url: "https://wikipedia.org" },
-      { label: "YouTube", url: "https://youtube.com" }
+    const presets = ['https://coolmathgames.com', 'https://poki.com', 'https://google.com', 'https://youtube.com', 'https://classroom.google.com', 'https://tetris.com/play-tetris']
+      .map(url => ({ label: new URL(url).hostname.replace('www.', ''), url }));
+
+    const shortcutGroups = [
+      { label: 'Games', urls: ['https://poki.com', 'https://www.coolmathgames.com', 'https://krunker.io', 'https://retrobowl.me'] },
+      { label: 'Study', urls: ['https://google.com', 'https://wikipedia.org', 'https://quizlet.com', 'https://notion.so'] },
+      { label: 'Tools', urls: ['https://replit.com', 'https://github.com', 'https://drive.google.com', 'https://classroom.google.com'] },
     ];
 
-    const gameLinks = [
-      { label: "Snokido", url: "https://www.snokido.com/" },
-      { label: "Armor Games", url: "https://armorgames.com/" },
-      { label: "Miniclip archive", url: "https://www.miniclip.com/games/en/" },
-      { label: "Unblocked Hub", url: "https://sites.google.com/view/theunblockedhub/home" },
-      { label: "Pixel warfare", url: "https://www.crazygames.com/game/pixel-warfare" },
-      { label: "Slope", url: "https://www.y8.com/games/slope" }
-    ];
-
-    const studyLinks = [
-      { label: "Desmos", url: "https://www.desmos.com/calculator" },
-      { label: "Replit", url: "https://replit.com/~" },
-      { label: "MDN Web Docs", url: "https://developer.mozilla.org/" },
-      { label: "Khan Academy", url: "https://www.khanacademy.org/" },
-      { label: "StackBlitz", url: "https://stackblitz.com/" },
-      { label: "NASA space", url: "https://www.nasa.gov/" }
-    ];
-
-      function setStatus(msg, type = "") {
-        statusEl.textContent = msg;
-        statusEl.className = `status ${type}`;
-        toolbarStatus.textContent = msg || "Idle";
-        toolbarStatus.className = `pill ${type === "error" ? "" : "good"}`;
-      }
-
-      function setProgress(value, visible = true) {
-        progress.style.opacity = visible ? 1 : 0;
-        progressBar.style.width = `${Math.min(100, Math.max(0, value))}%`;
-      }
-
-    function setEndpoint(url) {
-      activeEndpoint = url;
-      endpointPill.textContent = new URL(url).hostname;
-      endpointPill.title = url;
-      endpointStatus.textContent = `Using ${url}`;
-      if (rememberSessions.checked) localStorage.setItem(KEY_ENDPOINT, url);
+    function normalize(text) {
+      if (!text) return '';
+      const trimmed = text.trim();
+      if (/^https?:\/\//i.test(trimmed)) return trimmed;
+      if (/^[\w.-]+\.[A-Za-z]{2,}/.test(trimmed)) return `https://${trimmed}`;
+      return `https://www.google.com/search?q=${encodeURIComponent(trimmed)}`;
     }
 
-    function applyStealth(enabled) {
-      document.body.classList.toggle("stealth", enabled);
-      document.title = enabled ? "Docs viewer" : "MARSHALL06178 | Scramjet Portal";
-      if (rememberSessions.checked) {
-        localStorage.setItem(KEY_STEALTH, enabled ? "1" : "0");
+    function setStatus(message, danger = false) {
+      status.innerHTML = message ? `<span class="pill ${danger ? 'danger' : ''}">${message}</span>` : '';
+    }
+
+    function setFrameStatus(message, danger = false) {
+      frameStatus.innerHTML = message ? `<span class="pill ${danger ? 'danger' : ''}">${message}</span>` : '';
+    }
+
+    function load(url) {
+      const endpoint = endpoints[endpointSelect.selectedIndex]?.url || endpoints[0].url;
+      const target = normalize(url || input.value);
+      if (!target) return;
+      const scramUrl = `${endpoint}${encodeURIComponent(target)}`;
+      frame.src = scramUrl;
+      setStatus(`Loading via ${endpointSelect.options[endpointSelect.selectedIndex].textContent}`);
+      setFrameStatus('Loading...');
+      frame.dataset.target = target;
+    }
+
+    function retryLoad() {
+      if (frame.dataset.target) {
+        load(frame.dataset.target);
+      } else {
+        load(input.value);
       }
     }
 
-    function setLockStatus(msg, type = "") {
-      lockStatus.textContent = msg;
-      lockStatus.className = `status ${type}`;
+    function clearViewer() {
+      frame.src = 'about:blank';
+      frame.dataset.target = '';
+      setStatus('Cleared');
+      setFrameStatus('');
     }
 
-    function refreshLockHint() {
-      if (!lockHint) return;
-      lockHint.textContent = personalPass
-        ? "Personal password is active for this device."
-        : "Using the shared access key: Diddy_42";
-    }
-
-    function normalizeQuery(input) {
-      const value = input.trim();
-      if (!value) return "";
-      const looksLikeUrl = /\./.test(value) && !/\s/.test(value);
-      if (looksLikeUrl) {
-        return value.startsWith("http://") || value.startsWith("https://") ? value : `https://${value}`;
-      }
-      const encoded = encodeURIComponent(value);
-      return `https://duckduckgo.com/?q=${encoded}`;
-    }
-
-    function buildScramjetUrl(targetUrl) {
-      const scramjetUrl = new URL(activeEndpoint);
-      scramjetUrl.searchParams.set("url", targetUrl);
-      scramjetUrl.searchParams.set("embed", "1");
-      return scramjetUrl.toString();
-    }
-
-    function buildBridgeDoc(scramjetUrl) {
-      const safe = scramjetUrl.replace(/"/g, "&quot;");
-      return `<!doctype html><html><head><meta charset="utf-8"><title>Scramjet bridge</title><meta name="referrer" content="no-referrer"><style>body{margin:0;background:#05070f;color:#9fb2cc;font-family:Inter,system-ui;height:100vh;display:grid;place-items:center;}main{max-width:920px;width:95vw;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.03);border-radius:14px;box-shadow:0 12px 55px rgba(0,0,0,0.5);padding:16px;}p{margin:12px 0 0;text-align:center;color:#8ba3c4;line-height:1.5;font-size:13px;}iframe{width:100%;height:78vh;border:1px solid rgba(255,255,255,0.12);border-radius:12px;background:#0a0f1d;}</style></head><body><main><strong style="font-size:14px;">Connecting via Scramjet…</strong><iframe id="inner" src="${safe}" allowfullscreen referrerpolicy="no-referrer" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-downloads"></iframe><p>If your network blocks this, MARSHALL will swap to a safe in-page viewer.</p></main><script>const inner=document.getElementById('inner');inner.addEventListener('load',()=>parent.postMessage({type:'scramjet-load'},'*'),{once:true});inner.addEventListener('error',()=>parent.postMessage({type:'scramjet-error'},'*'),{once:true});setTimeout(()=>parent.postMessage({type:'scramjet-load-wait'},'*'),4500);</script></body></html>`;
-    }
-
-    function showFrame() { viewer.classList.add("active"); }
-
-    function pushRecent(url) {
-      if (!url) return;
-      recentItems = [url, ...recentItems.filter((item) => item !== url)].slice(0, 6);
-      renderRecent();
-      if (rememberSessions.checked) {
-        localStorage.setItem(KEY_RECENT, JSON.stringify(recentItems));
+    function fullscreen() {
+      if (frame.requestFullscreen) {
+        frame.requestFullscreen();
       }
     }
 
-    function renderRecent() {
-      recentEl.innerHTML = "";
-      if (!recentItems.length) return;
-      recentItems.forEach((url) => {
-        const item = document.createElement("div");
-        item.className = "recent-item";
-        const span = document.createElement("span");
-        span.textContent = url;
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "button-ghost";
-        btn.textContent = "Re-open";
-        btn.addEventListener("click", () => launch(url));
-        item.append(span, btn);
-        recentEl.appendChild(item);
+    function bypassPopout() {
+      const target = frame.dataset.target || normalize(input.value);
+      if (!target) return setStatus('Nothing to launch', true);
+      const endpoint = endpoints[endpointSelect.selectedIndex]?.url || endpoints[0].url;
+      const scramUrl = `${endpoint}${encodeURIComponent(target)}`;
+      const win = window.open('about:blank', '_blank');
+      if (!win) {
+        setStatus('Popup blocked — allow popups to bypass.', true);
+        return;
+      }
+      const doc = win.document;
+      doc.write(`<!doctype html><title>Loading...</title><style>html,body{margin:0;height:100%;background:#050910;}iframe{border:0;width:100%;height:100%;}</style><iframe src="${scramUrl}" allowfullscreen allow="clipboard-read; clipboard-write; fullscreen"></iframe>`);
+      doc.close();
+      setStatus('Bypass popout opened');
+    }
+
+    function buildChips() {
+      chips.innerHTML = '';
+      presets.forEach(({ label, url }) => {
+        const chip = document.createElement('div');
+        chip.className = 'chip';
+        chip.textContent = label;
+        chip.onclick = () => load(url);
+        chips.appendChild(chip);
       });
     }
 
-      function setCapsIndicator(event, target) {
-        const active = event.getModifierState && event.getModifierState("CapsLock");
-        target.textContent = active ? "Caps Lock is on" : "";
-      }
-
-      function renderEndpointOptions(saved) {
-        endpointSelect.innerHTML = "";
-        SCRAMJET_ENDPOINTS.forEach(({ label, url }) => {
-          const option = document.createElement("option");
-          option.value = url;
-          option.textContent = label;
-          if (saved === url) option.selected = true;
-          endpointSelect.appendChild(option);
-        });
-        setEndpoint(saved || SCRAMJET_ENDPOINTS[0].url);
-      }
-
-      async function testEndpointHealth(url) {
-        endpointStatus.textContent = "Pinging...";
-        endpointPill.textContent = "Checking...";
-        try {
-          const controller = new AbortController();
-          const timer = setTimeout(() => controller.abort(), 5000);
-          await fetch(url, { mode: "no-cors", signal: controller.signal });
-          clearTimeout(timer);
-          endpointStatus.textContent = "Endpoint reachable.";
-          endpointPill.textContent = new URL(url).hostname;
-        } catch (err) {
-          endpointStatus.textContent = "Endpoint blocked or slow. Try another.";
-          endpointPill.textContent = "Check endpoint";
-          setStatus("Scramjet endpoint failed — switch endpoints or open direct.", "error");
-        }
-      }
-
-      function renderCustomShortcuts() {
-        customLinks.innerHTML = "";
-        if (!customItems.length) return;
-        customItems.forEach((item, index) => {
-          const btn = document.createElement("button");
-          btn.type = "button";
-          btn.textContent = item.label;
-          btn.className = "link-card";
-          btn.title = item.url;
-          btn.addEventListener("click", () => launch(item.url));
-
-          const remove = document.createElement("button");
-          remove.type = "button";
-          remove.textContent = "✕";
-          remove.className = "button-ghost";
-          remove.style.marginLeft = "8px";
-          remove.addEventListener("click", () => {
-            customItems.splice(index, 1);
-            localStorage.setItem(KEY_CUSTOM, JSON.stringify(customItems));
-            renderCustomShortcuts();
-          });
-
-          const row = document.createElement("div");
-          row.style.display = "flex";
-          row.style.alignItems = "center";
-          row.style.gap = "8px";
-          row.append(btn, remove);
-          customLinks.appendChild(row);
-        });
-      }
-
-      function addCustomShortcut() {
-        const label = customLabel.value.trim();
-        const url = normalizeQuery(customUrl.value);
-        if (!label || !url) {
-          customStatus.textContent = "Enter a label and a valid link.";
-          customStatus.className = "status error";
-          return;
-        }
-      customItems = [{ label, url }, ...customItems.filter((c) => c.url !== url)].slice(0, 12);
-      customStatus.textContent = "Added shortcut.";
-      customStatus.className = "status success";
-      customLabel.value = "";
-      customUrl.value = "";
-      localStorage.setItem(KEY_CUSTOM, JSON.stringify(customItems));
-      renderCustomShortcuts();
-    }
-
-    function savePersonalPassword() {
-      const value = personalPassInput.value.trim();
-      if (value.length < 6) {
-        passStatus.textContent = "Use at least 6 characters.";
-        passStatus.className = "status error";
-        return;
-      }
-      personalPass = value;
-      localStorage.setItem(KEY_PERSONAL, value);
-      passStatus.textContent = "Personal password saved for this device.";
-      passStatus.className = "status success";
-      personalPassInput.value = "";
-      refreshLockHint();
-    }
-
-    function launch(url) {
-        if (!url) {
-          setStatus("Type something first.", "error");
-          queryInput.focus();
-          return;
-        }
-
-      if (loadTimer) {
-        clearTimeout(loadTimer);
-      }
-      if (blockTimer) {
-        clearTimeout(blockTimer);
-      }
-      blockHints.textContent = "";
-
-        const scramjetUrl = buildScramjetUrl(url);
-        currentUrl = url;
-        showFrame();
-        viewer.classList.remove("collapsed");
-        setStatus("Loading with Scramjet...", "");
-        setProgress(12, true);
-        blockTimer = setTimeout(() => handleBlocked(scramjetUrl, url), 6500);
-        frame.srcdoc = buildBridgeDoc(scramjetUrl);
-        fallbackStatus.textContent = "";
-        loadTimer = setTimeout(() => {
-          setStatus("If it looks stuck, try reloading, change endpoint, or open directly in-frame.", "error");
-          addFallbackActions(scramjetUrl, url);
-        }, 8000);
-
-        const interval = setInterval(() => {
-          const width = parseFloat(progressBar.style.width) || 0;
-          if (width >= 90) return clearInterval(interval);
-          setProgress(width + 8, true);
-        }, 700);
-
-        if (rememberSessions.checked) {
-          localStorage.setItem("marshall-last", url);
-        }
-      }
-
-    function addFallbackActions(scramjetUrl, directUrl) {
-      fallbackStatus.textContent = "";
-      const wrap = document.createElement("div");
-      wrap.className = "stack";
-
-      const scramjetBtn = document.createElement("button");
-      scramjetBtn.type = "button";
-      scramjetBtn.className = "button-ghost";
-      scramjetBtn.textContent = "Retry Scramjet here";
-      scramjetBtn.addEventListener("click", () => launch(directUrl));
-
-      const layeredBtn = document.createElement("button");
-      layeredBtn.type = "button";
-      layeredBtn.className = "button-ghost";
-      layeredBtn.textContent = "Use layered embed";
-      layeredBtn.addEventListener("click", () => layeredEmbed(scramjetUrl));
-
-      const directBtn = document.createElement("button");
-      directBtn.type = "button";
-      directBtn.className = "button-ghost";
-      directBtn.textContent = "Open directly in-frame";
-      directBtn.addEventListener("click", () => openDirect(directUrl));
-
-      const safeBtn = document.createElement("button");
-      safeBtn.type = "button";
-      safeBtn.className = "button-ghost";
-      safeBtn.textContent = "Safe viewer (no new tab)";
-      safeBtn.addEventListener("click", () => safeViewer(directUrl));
-
-      wrap.append(scramjetBtn, layeredBtn, directBtn, safeBtn);
-      fallbackStatus.appendChild(wrap);
-    }
-
-    function handleBlocked(scramjetUrl, directUrl) {
-      clearTimeout(loadTimer);
-      clearTimeout(blockTimer);
-      blockHints.textContent = "Chrome blocked the embed or returned file-not-found. Switched to the safe viewer; try another endpoint, layered embed, cloak, or popout.";
-      setStatus("Embed blocked or refused by Chrome.", "error");
-      addFallbackActions(scramjetUrl, directUrl);
-      layeredEmbed(scramjetUrl);
-      safeViewer(directUrl);
-      if (blockGuard.checked) {
-        cloakLoad(scramjetUrl);
-        openCloakedPop(scramjetUrl);
-      }
-    }
-
-    function cloakLoad(scramjetUrl) {
-      const html = `<meta http-equiv="refresh" content="0;url=${scramjetUrl.replace(/&/g, "&amp;")}"><style>body{margin:0;font-family:Inter,sans-serif;background:#040915;color:#9fb1d3;display:grid;place-items:center;height:100vh;}p{max-width:420px;text-align:center;line-height:1.5;}</style><p>Retrying inside a cloaked embed…</p>`;
-      frame.src = `data:text/html;charset=utf-8,${encodeURIComponent(html)}`;
-      setStatus("Cloaked retry sent — if it still fails, switch endpoints.", "warn");
-      setProgress(40, true);
-    }
-
-    let layeredBlob;
-    function layeredEmbed(scramjetUrl) {
-      if (layeredBlob) URL.revokeObjectURL(layeredBlob);
-      const safe = scramjetUrl.replace(/"/g, "&quot;");
-      const html = `<!doctype html><html><head><meta charset="utf-8"><title>Notes</title><meta name="referrer" content="no-referrer"><style>body{margin:0;background:#05070f;color:#c9d4f5;font-family:Inter,system-ui;height:100vh;display:grid;place-items:center;}main{max-width:660px;width:92vw;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.04);padding:18px;border-radius:16px;box-shadow:0 18px 70px rgba(0,0,0,0.45);}p{line-height:1.5;text-align:center;color:#98a5c6;}</style></head><body><main><p>Running a layered embed to dodge Chrome's frame blocking…</p><iframe id="inner" src="${safe}" style="width:100%;height:70vh;border:1px solid rgba(255,255,255,0.12);border-radius:12px;background:#0a0f1c" allowfullscreen referrerpolicy="no-referrer" sandbox="allow-scripts allow-same-origin allow-forms allow-modals allow-popups"></iframe><script>setTimeout(()=>{const inner=document.getElementById('inner');try{inner.focus();}catch(e){}},300);</script></main></body></html>`;
-      layeredBlob = URL.createObjectURL(new Blob([html], { type: "text/html" }));
-      frame.src = layeredBlob;
-      setStatus("Layered embed running — this stays on-page.", "warn");
-      setProgress(55, true);
-    }
-
-    function openCloakedPop(targetUrl) {
-      if (!targetUrl) {
-        setStatus("Nothing to open yet.", "error");
-        return;
-      }
-
-      const popup = window.open("", "marshall-notes", "noopener,noreferrer,width=1020,height=720,left=80,top=80");
-      if (!popup) {
-        setStatus("Popup blocked — allow popups for this page to use the bypass.", "error");
-        return;
-      }
-
-      const escapedUrl = targetUrl.replace(/"/g, "&quot;").replace(/</g, "&lt;");
-      const doc = `<!doctype html><html><head><title>Study Notes</title><meta name="referrer" content="no-referrer"><style>body{margin:0;font-family:Inter,system-ui;background:#0a0f1a;color:#c7d3f1;display:grid;place-items:center;height:100vh;}main{max-width:540px;padding:32px;border:1px solid rgba(255,255,255,0.12);border-radius:18px;background:rgba(255,255,255,0.04);box-shadow:0 22px 60px rgba(0,0,0,0.4);}p{line-height:1.6;text-align:center;}button{margin-top:12px;padding:12px 16px;border-radius:12px;border:1px solid rgba(255,255,255,0.18);background:linear-gradient(135deg,#7ee7c6,#7fb3ff);color:#031018;font-weight:800;cursor:pointer;}small{color:#8ba2c4;}</style></head><body><main><p>Opening a cloaked Scramjet session. If it stalls, tap the button below.</p><button onclick="location.href='${escapedUrl}'">Open now</button><p><small>If this popout is blocked by Chrome policies, switch endpoints back in MARSHALL.</small></p></main><script>setTimeout(()=>location.href='${escapedUrl}',400);</script></body></html>`;
-      popup.document.write(doc);
-      popup.document.close();
-      blockHints.textContent = "Opened a cloaked popout tab; check it if the embed stays blocked.";
-      setStatus("Launched bypass popout.", "warn");
-    }
-
-    function safeViewer(url) {
-      if (!url) return;
-      const escaped = url.replace(/"/g, "&quot;");
-      const doc = `<!doctype html><html><head><meta charset="utf-8"><title>Reader</title><meta name="referrer" content="no-referrer"><style>body{margin:0;font-family:Inter,system-ui;background:#050912;color:#cbd5ef;display:grid;place-items:center;height:100vh;}main{max-width:920px;width:94vw;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);border-radius:16px;box-shadow:0 16px 60px rgba(0,0,0,0.5);padding:18px;}header{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px;}iframe{width:100%;height:76vh;border:1px solid rgba(255,255,255,0.12);border-radius:12px;background:#02050d;}p{margin:0;color:#8da2c6;line-height:1.5;font-size:14px;}</style></head><body><main><header><strong>Safe viewer</strong><span style="font-size:12px;color:#95a6c6;">If it errors, use popout.</span></header><iframe src="${escaped}" allowfullscreen referrerpolicy="no-referrer" sandbox="allow-scripts allow-forms allow-same-origin allow-popups"></iframe><p>This keeps the tab on-page to avoid school blocking.</p></main></body></html>`;
-      frame.srcdoc = doc;
-      blockHints.textContent = "Safe viewer loaded. Try popout if the site blocks embeds.";
-      setStatus("Running inside safe viewer.", "warn");
-      setProgress(0, false);
-    }
-
-    function openDirect(url) {
-      if (!url) {
-        setStatus("No URL to open yet.", "error");
-        return;
-      }
-      showFrame();
-      frame.src = url;
-      setStatus("Opening without Scramjet (embedded).", "");
-      setProgress(0, false);
-    }
-
-    document.querySelector("form.search").addEventListener("submit", (e) => {
-      e.preventDefault();
-      setStatus("Launching...", "");
-      const url = normalizeQuery(queryInput.value);
-      launch(url);
-    });
-
-    presets.forEach((text) => {
-      const chip = document.createElement("button");
-      chip.type = "button";
-      chip.textContent = text;
-      chip.className = "chip";
-      chip.addEventListener("click", () => {
-        queryInput.value = text;
-        queryInput.focus();
+    function buildLinks() {
+      links.innerHTML = '';
+      shortcutGroups.forEach(group => {
+        const tile = document.createElement('a');
+        tile.className = 'link-tile';
+        tile.textContent = `${group.label} → ${group.urls.length} sites`;
+        tile.href = '#';
+        tile.onclick = e => {
+          e.preventDefault();
+          const pick = group.urls[Math.floor(Math.random() * group.urls.length)];
+          load(pick);
+        };
+        links.appendChild(tile);
       });
-      chipsEl.appendChild(chip);
-    });
+    }
 
-    quickLinks.forEach(({ label, url }) => {
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.textContent = label;
-      btn.className = "link-card";
-      btn.addEventListener("click", () => launch(url));
-      linksEl.appendChild(btn);
-    });
+    function buildEndpoints() {
+      endpoints.forEach((e, i) => {
+        const opt = document.createElement('option');
+        opt.value = e.url; opt.textContent = e.label;
+        endpointSelect.appendChild(opt);
+        if (i === 0) endpointSelect.selectedIndex = 0;
+      });
+      const saved = localStorage.getItem('marshall-endpoint');
+      if (saved) {
+        const idx = endpoints.findIndex(e => e.url === saved);
+        if (idx >= 0) endpointSelect.selectedIndex = idx;
+      }
+      endpointSelect.onchange = () => {
+        localStorage.setItem('marshall-endpoint', endpointSelect.value);
+        if (frame.dataset.target) retryLoad();
+      };
+    }
 
-    gameLinks.forEach(({ label, url }) => {
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.textContent = label;
-      btn.className = "link-card";
-      btn.addEventListener("click", () => launch(url));
-      gameLinksEl.appendChild(btn);
-    });
-
-    studyLinks.forEach(({ label, url }) => {
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.textContent = label;
-      btn.className = "link-card";
-      btn.addEventListener("click", () => launch(url));
-      studyLinksEl.appendChild(btn);
-    });
-
-    reloadBtn.addEventListener("click", () => {
-      if (!currentUrl) {
-        setStatus("Nothing to reload yet.", "error");
+    function handleLock() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved === PASSWORD) {
+        lock.classList.add('hidden');
         return;
       }
-      launch(currentUrl);
-    });
-
-    openDirectBtn.addEventListener("click", () => openDirect(currentUrl));
-
-    cloakBtn.addEventListener("click", () => {
-      if (!currentUrl) {
-        setStatus("Nothing to cloak yet.", "error");
-        return;
-      }
-      const scramjetUrl = buildScramjetUrl(currentUrl);
-      cloakLoad(scramjetUrl);
-    });
-
-    popoutBtn.addEventListener("click", () => {
-      const target = currentUrl || normalizeQuery(queryInput.value);
-      if (!target) {
-        setStatus("Enter a link before using the popout bypass.", "error");
-        queryInput.focus();
-        return;
-      }
-      openCloakedPop(buildScramjetUrl(target));
-    });
-
-    fullscreenBtn.addEventListener("click", () => {
-      viewer.classList.toggle("fullscreen");
-      fullscreenBtn.textContent = viewer.classList.contains("fullscreen") ? "Exit fullscreen" : "Fullscreen";
-    });
-
-    collapseBtn.addEventListener("click", () => {
-      viewer.classList.toggle("collapsed");
-      collapseBtn.textContent = viewer.classList.contains("collapsed") ? "Expand" : "Collapse";
-    });
-
-    clearBtn.addEventListener("click", () => {
-      frame.src = "about:blank";
-      setStatus("Viewer cleared.", "");
-      currentUrl = "";
-    });
-
-    randomBtn.addEventListener("click", () => {
-      const pool = [
-        ...presets.map((p) => ({ label: p, url: normalizeQuery(p) })),
-        ...quickLinks,
-        ...gameLinks,
-        ...studyLinks,
-        ...customItems,
-        ...recentItems.map((r) => ({ label: r, url: r })),
-      ];
-      const pick = pool[Math.floor(Math.random() * pool.length)];
-      if (pick) {
-        queryInput.value = pick.url;
-        launch(pick.url);
-      }
-    });
-
-    queryInput.addEventListener("keydown", (event) => setCapsIndicator(event, capsWarning));
-    lockPass.addEventListener("keydown", (event) => setCapsIndicator(event, lockCaps));
-    adminPass.addEventListener("keydown", (event) => setCapsIndicator(event, adminCaps));
-
-    togglePass.addEventListener("click", () => {
-      const isText = lockPass.type === "text";
-      lockPass.type = isText ? "password" : "text";
-      togglePass.textContent = isText ? "Show" : "Hide";
-      lockPass.focus();
-    });
+      lock.classList.remove('hidden');
+      lockInput.focus();
+    }
 
     function unlock() {
-      lockLayer.classList.add("hide");
-      setTimeout(() => {
-        lockLayer.style.display = "none";
-        lockLayer.setAttribute("aria-hidden", "true");
-      }, 260);
-      queryInput.focus();
-      if (rememberSessions.checked && quickUnlock.checked) {
-        localStorage.setItem(KEY_UNLOCKED, "1");
+      const val = lockInput.value.trim();
+      if (!val) return;
+      if (val === PASSWORD) {
+        lockStatus.textContent = 'Unlocked';
+        if (remember.checked) localStorage.setItem(STORAGE_KEY, val);
+        lock.classList.add('hidden');
+        setTimeout(() => lock.style.display = 'none', 240);
       } else {
-        localStorage.removeItem(KEY_UNLOCKED);
-      }
-      setStatus("Unlocked. Ready to launch.", "success");
-      const last = localStorage.getItem("marshall-last");
-      if (autoResume.checked && last) {
-        launch(last);
+        lockStatus.textContent = 'Incorrect password';
+        lockStatus.style.color = 'var(--danger)';
       }
     }
 
-    function applyLockout(durationMs) {
-      lockoutUntil = Date.now() + durationMs;
-      lockPass.disabled = true;
-      togglePass.disabled = true;
-      setLockStatus(`Locked for ${Math.round(durationMs / 1000)} seconds.`, "error");
-      const interval = setInterval(() => {
-        const remaining = lockoutUntil - Date.now();
-        if (remaining <= 0) {
-          clearInterval(interval);
-          lockPass.disabled = false;
-          togglePass.disabled = false;
-          setLockStatus("Try again.", "");
-          lockPass.focus();
-        } else {
-          setLockStatus(`Locked for ${Math.ceil(remaining / 1000)} seconds...`, "error");
-        }
-      }, 500);
+    function resetSaved() {
+      localStorage.removeItem(STORAGE_KEY);
+      lockStatus.textContent = 'Saved key cleared';
+      lockStatus.style.color = 'var(--text)';
+      lock.classList.remove('hidden');
+      lock.style.display = 'flex';
+      lockInput.value = '';
+      lockInput.focus();
     }
 
-    document.getElementById("lock-form").addEventListener("submit", (e) => {
-      e.preventDefault();
-      if (Date.now() < lockoutUntil) return;
-      const val = lockPass.value.trim();
-      const matchesShared = val === PASSWORD;
-      const matchesPersonal = personalPass && val === personalPass;
-      if (matchesShared || matchesPersonal) {
-        attempts = 0;
-        const which = matchesPersonal ? "personal key" : "shared key";
-        setLockStatus(`Unlocked with ${which}.`, "success");
-        unlock();
-      } else {
-        attempts += 1;
-        const left = Math.max(0, 5 - attempts);
-        setLockStatus(left ? `Wrong password. ${left} tries left.` : "Too many attempts.", "error");
-        lockPass.focus();
-        if (!left) {
-          applyLockout(30000);
-          attempts = 0;
-        }
-      }
+    frame.addEventListener('load', () => {
+      setFrameStatus('Loaded');
     });
 
-    tabs.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        tabs.forEach((b) => b.classList.remove("active"));
-        panels.forEach((p) => p.classList.remove("active"));
-        btn.classList.add("active");
-        document.getElementById(`tab-${btn.dataset.tab}`).classList.add("active");
-      });
+    frame.addEventListener('error', () => {
+      setFrameStatus('Blocked or failed — try bypass popout or another endpoint', true);
     });
 
-    endpointSelect.addEventListener("change", (e) => {
-      setEndpoint(e.target.value);
-      if (rememberSessions.checked) localStorage.setItem(KEY_ENDPOINT, e.target.value);
-    });
+    launchBtn.onclick = () => load();
+    retryBtn.onclick = () => retryLoad();
+    clearBtn.onclick = () => clearViewer();
+    fullscreenBtn.onclick = () => fullscreen();
+    bypassBtn.onclick = () => bypassPopout();
+    unlockBtn.onclick = () => unlock();
+    resetPass.onclick = () => resetSaved();
+    lockInput.addEventListener('keyup', e => { if (e.key === 'Enter') unlock(); });
+    input.addEventListener('keyup', e => { if (e.key === 'Enter') load(); });
 
-    testEndpoint.addEventListener("click", () => {
-      testEndpointHealth(endpointSelect.value);
-    });
-
-    savePassBtn.addEventListener("click", savePersonalPassword);
-
-    quickUnlock.addEventListener("change", () => {
-      localStorage.setItem(KEY_QUICK, quickUnlock.checked ? "1" : "0");
-    });
-
-    addCustom.addEventListener("click", addCustomShortcut);
-
-    function applyTheme(name) {
-      const theme = themes[name];
-      if (!theme) return;
-      Object.entries(theme.values).forEach(([key, value]) => {
-        document.documentElement.style.setProperty(key, value);
-      });
-      themeStatus.textContent = `${theme.label} applied.`;
-      if (rememberSessions.checked) localStorage.setItem(KEY_THEME, name);
-    }
-
-    Object.entries(themes).forEach(([key, value]) => {
-      const option = document.createElement("option");
-      option.value = key;
-      option.textContent = value.label;
-      themeSelect.appendChild(option);
-    });
-
-    themeSelect.addEventListener("change", (e) => applyTheme(e.target.value));
-
-    reducedMotion.addEventListener("change", () => {
-      document.documentElement.style.setProperty("scroll-behavior", reducedMotion.checked ? "auto" : "smooth");
-      document.body.style.transition = reducedMotion.checked ? "none" : "";
-    });
-
-    rememberSessions.addEventListener("change", () => {
-      if (!rememberSessions.checked) {
-        localStorage.removeItem(KEY_THEME);
-        localStorage.removeItem(KEY_RECENT);
-        localStorage.removeItem("marshall-last");
-        localStorage.removeItem(KEY_CUSTOM);
-        localStorage.removeItem(KEY_ENDPOINT);
-        localStorage.removeItem(KEY_AUTORESTORE);
-        localStorage.removeItem(KEY_STEALTH);
-        localStorage.removeItem(KEY_BLOCKGUARD);
-        localStorage.removeItem(KEY_UNLOCKED);
-        localStorage.removeItem(KEY_PERSONAL);
-        localStorage.removeItem(KEY_QUICK);
-        personalPass = "";
-        refreshLockHint();
-      } else {
-        if (localStorage.getItem(KEY_THEME)) applyTheme(localStorage.getItem(KEY_THEME));
-        if (localStorage.getItem(KEY_UNLOCKED) === "1") unlock();
-      }
-    });
-
-    autoResume.addEventListener("change", () => {
-      if (rememberSessions.checked) {
-        localStorage.setItem(KEY_AUTORESTORE, autoResume.checked ? "1" : "0");
-      }
-    });
-
-    stealthMode.addEventListener("change", () => {
-      applyStealth(stealthMode.checked);
-    });
-
-    blockGuard.addEventListener("change", () => {
-      if (rememberSessions.checked) {
-        localStorage.setItem(KEY_BLOCKGUARD, blockGuard.checked ? "1" : "0");
-      }
-    });
-
-    adminUnlock.addEventListener("click", () => {
-      if (adminUnlocked) return;
-      if (adminPass.value.trim() === ADMIN_PASSWORD) {
-        adminUnlocked = true;
-        adminStatus.textContent = "Admin panel unlocked.";
-        adminStatus.className = "status success";
-        renderAdminContent();
-      } else {
-        adminStatus.textContent = "Invalid admin password.";
-        adminStatus.className = "status error";
-      }
-    });
-
-    document.addEventListener("keydown", (e) => {
-      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
-        e.preventDefault();
-        queryInput.focus();
-      }
-      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === "f") {
-        e.preventDefault();
-        fullscreenBtn.click();
-      }
-      if (e.altKey && e.key.toLowerCase() === "r") {
-        e.preventDefault();
-        reloadBtn.click();
-      }
-    });
-
-    function renderAdminContent() {
-      const wrap = document.createElement("div");
-      wrap.className = "settings-list";
-
-      const frameTools = document.createElement("div");
-      frameTools.className = "settings-item";
-      frameTools.innerHTML = "<strong>Frame tools</strong><p class=\"hint\">Force clear, reload, or swap to direct embed instantly.</p>";
-      const forceClear = document.createElement("button");
-      forceClear.className = "button-ghost";
-      forceClear.textContent = "Force clear frame";
-      forceClear.addEventListener("click", () => { frame.src = "about:blank"; setStatus("Viewer cleared by admin."); });
-      const forceDirect = document.createElement("button");
-      forceDirect.className = "button-ghost";
-      forceDirect.textContent = "Force direct reopen";
-      forceDirect.addEventListener("click", () => openDirect(currentUrl || "https://example.org"));
-      frameTools.append(forceClear, document.createElement("br"), forceDirect);
-
-      const recenter = document.createElement("div");
-      recenter.className = "settings-item";
-      recenter.innerHTML = "<strong>Recents</strong><p class=\"hint\">Clear or reuse your last few launches.</p>";
-      const clearHistory = document.createElement("button");
-      clearHistory.className = "button-ghost";
-      clearHistory.textContent = "Clear recent list";
-      clearHistory.addEventListener("click", () => {
-        recentItems = [];
-        renderRecent();
-        fallbackStatus.textContent = "";
-        localStorage.removeItem(KEY_RECENT);
-      });
-      const reopenLast = document.createElement("button");
-      reopenLast.className = "button-ghost";
-      reopenLast.textContent = "Reopen last stored";
-      reopenLast.addEventListener("click", () => {
-        const last = localStorage.getItem("marshall-last") || recentItems[0];
-        if (last) launch(last);
-      });
-      recenter.append(clearHistory, document.createElement("br"), reopenLast);
-
-      const diagnostics = document.createElement("div");
-      diagnostics.className = "settings-item";
-      diagnostics.innerHTML = "<strong>Diagnostics</strong><p class=\"hint\">Test the active Scramjet endpoint or reset everything.</p>";
-      const pingBtn = document.createElement("button");
-      pingBtn.className = "button-ghost";
-      pingBtn.textContent = "Ping endpoint";
-      pingBtn.addEventListener("click", () => testEndpointHealth(activeEndpoint));
-      const purge = document.createElement("button");
-      purge.className = "button-ghost";
-      purge.textContent = "Clear local cache";
-      purge.addEventListener("click", () => {
-        localStorage.clear();
-        location.reload();
-      });
-      diagnostics.append(pingBtn, document.createElement("br"), purge);
-
-      const access = document.createElement("div");
-      access.className = "settings-item";
-      access.innerHTML = "<strong>Access</strong><p class=\"hint\">Reset the gate or personal password if you need to lock down again.</p>";
-      const clearPass = document.createElement("button");
-      clearPass.className = "button-ghost";
-      clearPass.textContent = "Clear personal password";
-      clearPass.addEventListener("click", () => {
-        personalPass = "";
-        localStorage.removeItem(KEY_PERSONAL);
-        refreshLockHint();
-        setStatus("Personal password cleared.", "success");
-      });
-      const relock = document.createElement("button");
-      relock.className = "button-ghost";
-      relock.textContent = "Require unlock again";
-      relock.addEventListener("click", () => {
-        localStorage.removeItem(KEY_UNLOCKED);
-        lockLayer.style.display = "block";
-        lockLayer.classList.remove("hide");
-        lockLayer.removeAttribute("aria-hidden");
-        lockPass.value = "";
-        lockPass.focus();
-      });
-      access.append(clearPass, document.createElement("br"), relock);
-
-      wrap.append(frameTools, recenter, diagnostics, access);
-      adminContent.innerHTML = "";
-      adminContent.appendChild(wrap);
-    }
-
-    const savedTheme = localStorage.getItem(KEY_THEME);
-    if (savedTheme && themes[savedTheme]) {
-      themeSelect.value = savedTheme;
-      applyTheme(savedTheme);
-    } else {
-      themeSelect.value = "origin";
-      applyTheme("origin");
-    }
-
-    const savedEndpoint = localStorage.getItem(KEY_ENDPOINT);
-    renderEndpointOptions(savedEndpoint);
-
-    const savedAuto = localStorage.getItem(KEY_AUTORESTORE);
-    autoResume.checked = savedAuto === "1";
-
-    const savedStealth = localStorage.getItem(KEY_STEALTH) === "1";
-    stealthMode.checked = savedStealth;
-    applyStealth(savedStealth);
-
-    const savedGuard = localStorage.getItem(KEY_BLOCKGUARD);
-    if (savedGuard !== null) blockGuard.checked = savedGuard === "1";
-
-    const savedQuick = localStorage.getItem(KEY_QUICK);
-    if (savedQuick !== null) quickUnlock.checked = savedQuick === "1";
-
-    refreshLockHint();
-    if (personalPass) {
-      passStatus.textContent = "Personal password loaded for this device.";
-      passStatus.className = "status success";
-    }
-
-    try {
-      const storedCustom = JSON.parse(localStorage.getItem(KEY_CUSTOM) || "[]");
-      if (Array.isArray(storedCustom)) {
-        customItems = storedCustom;
-        renderCustomShortcuts();
-      }
-    } catch (err) {
-      console.error("Failed to load custom shortcuts", err);
-    }
-
-    if (localStorage.getItem(KEY_UNLOCKED) === "1" && quickUnlock.checked) {
-      unlock();
-    } else {
-      lockPass.focus();
-    }
-
-    try {
-      const storedRecents = JSON.parse(localStorage.getItem(KEY_RECENT) || "[]");
-      if (Array.isArray(storedRecents)) {
-        recentItems = storedRecents;
-        renderRecent();
-      }
-    } catch (err) {
-      console.error("Failed to load recents", err);
-    }
-
-    const lastUrl = localStorage.getItem("marshall-last");
-    if (lastUrl) queryInput.value = lastUrl;
+    buildChips();
+    buildLinks();
+    buildEndpoints();
+    handleLock();
   </script>
 </body>
 </html>
