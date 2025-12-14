@@ -38,13 +38,13 @@
     }
 
     .shell {
-      width: min(1280px, 100%);
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.03));
+      width: min(1220px, 100%);
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.03));
       border: 1px solid var(--border);
-      border-radius: 28px;
-      padding: 24px;
-      box-shadow: 0 18px 64px rgba(0, 0, 0, 0.5);
-      backdrop-filter: blur(12px);
+      border-radius: 34px;
+      padding: 26px;
+      box-shadow: 0 22px 80px rgba(0, 0, 0, 0.55);
+      backdrop-filter: blur(14px);
       animation: rise 640ms cubic-bezier(0.16, 1, 0.3, 1);
     }
 
@@ -69,13 +69,11 @@
     .badge { padding: 7px 11px; border-radius: 999px; background: rgba(124, 224, 196, 0.16); color: var(--accent); border: 1px solid rgba(124, 224, 196, 0.34); box-shadow: 0 12px 30px rgba(124, 224, 196, 0.18); font-size: 12px; }
     .muted { color: var(--muted); }
 
-    .layout {
-      display: grid;
-      grid-template-columns: 1.25fr 1.1fr;
-      gap: 14px;
+    .flow {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
     }
-
-    @media (max-width: 1040px) { .layout { grid-template-columns: 1fr; } }
 
     .card {
       background: var(--panel);
@@ -147,7 +145,15 @@
     .toolbar button { padding: 11px 12px; font-size: 13px; }
 
     .viewer-card h2 { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-    .viewer-wrap { position: relative; border-radius: 20px; overflow: hidden; border: 1px solid var(--border); background: var(--panel-strong); min-height: 520px; }
+    .viewer-wrap {
+      position: relative;
+      border-radius: 24px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--panel-strong);
+      min-height: 68vh;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+    }
     iframe { width: 100%; height: 100%; border: none; background: #0b101c; }
 
     .status { margin-top: 6px; font-size: 13px; color: var(--muted); min-height: 18px; }
@@ -156,6 +162,8 @@
 
     .meta { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
     .small { font-size: 13px; color: var(--muted); }
+
+    .wide-card { padding: 18px; border-radius: 22px; background: linear-gradient(140deg, rgba(255,255,255,0.07), rgba(255,255,255,0.03)); border: 1px solid var(--border); }
 
     .lock-screen {
       position: fixed;
@@ -205,11 +213,11 @@
       <div class="muted">Full-screen viewer, bypass controls, and faster on-page launches.</div>
     </header>
 
-    <div class="layout">
-      <div class="card viewer-card">
+    <div class="flow">
+      <div class="card viewer-card wide-card">
         <h2>Viewer <span class="small" id="endpointLabel"></span></h2>
         <div class="viewer-wrap">
-          <iframe id="frame" title="Scramjet viewer" sandbox="allow-scripts allow-forms allow-same-origin allow-popups allow-modals allow-downloads"></iframe>
+          <iframe id="frame" title="Scramjet viewer" sandbox="allow-scripts allow-forms allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-modals allow-downloads allow-storage-access-by-user-activation"></iframe>
         </div>
         <div class="toolbar">
           <button class="button-ghost button-inline" id="reload">Reload</button>
@@ -221,7 +229,7 @@
         </div>
       </div>
 
-      <div class="card">
+      <div class="card wide-card">
         <div class="tab-bar">
           <div class="tab active" data-tab="launch">Launch</div>
           <div class="tab" data-tab="shortcuts">Shortcuts</div>
@@ -358,9 +366,9 @@
     const reopenBtn = document.getElementById('reopen');
 
     const endpoints = [
-      { label: 'Worker mirror (default)', url: 'https://scramjet.workers.dev/?url=' },
+      { label: 'Scramjet main (preferred)', url: 'https://scramjet.tech/?url=' },
+      { label: 'Worker mirror', url: 'https://scramjet.workers.dev/?url=' },
       { label: 'Proxy mirror', url: 'https://scramjet-proxy.pages.dev/?url=' },
-      { label: 'Scramjet main', url: 'https://scramjet.tech/?url=' },
       { label: 'Stealth data bridge', url: 'data:text/html;base64,' },
     ];
 
@@ -408,14 +416,16 @@
       endpointLabel.textContent = label ? `via ${label}` : '';
     }
 
-    function load(url) {
+    let fallbackUsed = false;
+
+    function load(url, opts = {}) {
       const target = normalize(url || input.value);
       if (!target) return;
+      if (!opts.fromFallback) fallbackUsed = false;
       const { url: endpoint } = resolveEndpoint();
-      const baseUrl = `${endpoint}${endpoint.endsWith('?url=') ? '' : ''}`;
       const scramUrl = endpoint.startsWith('data:')
         ? `${endpoints[0].url}${encodeURIComponent(target)}`
-        : `${baseUrl}${encodeURIComponent(target)}`;
+        : `${endpoint}${encodeURIComponent(target)}`;
       const finalSrc = endpoint.startsWith('data:') ? buildBridgeMarkup(scramUrl) : scramUrl;
       frame.dataset.target = target;
       localStorage.setItem(LAST_TARGET, target);
@@ -431,6 +441,16 @@
       clearTimeout(guardTimer);
       guardTimer = setTimeout(() => {
         if (scramUrl.startsWith('data:')) return;
+        const currentEndpoint = resolveEndpoint();
+        const workerOption = Array.from(endpointSelect.options).find(opt => opt.textContent.includes('Worker'));
+        if (!fallbackUsed && workerOption && currentEndpoint.label.includes('Scramjet main')) {
+          fallbackUsed = true;
+          endpointSelect.value = workerOption.value;
+          setFrameStatus('Blocked — rerouting to worker mirror...', true);
+          updateEndpointLabel();
+          load(target, { fromFallback: true });
+          return;
+        }
         setFrameStatus('Chrome blocked embed — trying bridge...', true);
         frame.src = buildBridgeMarkup(scramUrl);
       }, 4500);
